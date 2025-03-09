@@ -1,0 +1,38 @@
+<div class="card col-9 mx-auto">
+    <div class="card-header">
+        Registro
+    </div>
+    <div class="card-body">
+        <h5 class="card-title text-center mb-3">Crear una cuenta</h5>
+        <p class="card-subtitle text-center fs-6">Es rápido y sencillo</p>
+        <hr class="col-11 mx-auto mt-1">
+        <form [formGroup]="registroForm" (ngSubmit)="registrar()" novalidate="" class="row m-0 p-0">
+            <div class="mb-3 col-6 mx-auto">
+                <label class="form-label">Cédula: </label>
+                <input type="text" class="form-control" formControlName="cedula" />
+            </div>
+            <div class="mb-3 col-6 mx-auto">
+                <label class="form-label">Nombre: </label>
+                <input type="text" class="form-control" formControlName="nombre" />
+            </div>
+            <div class="mb-3 col-6 mx-auto">
+                <label class="form-label">Email: </label>
+                <input type="email" class="form-control" formControlName="email" />
+            </div>
+            <div class="mb-3 col-6 mx-auto">
+                <label class="form-label">Teléfono: </label>
+                <input type="number" class="form-control" formControlName="telefono" />
+            </div>
+            <div class="mb-3 col-12 mx-auto">
+                <label class="form-label">Dirección: </label>
+                <input type="text" class="form-control" formControlName="direccion" />
+            </div>
+            <div class="mb-3 text-center d-flex justify-content-center gap-3">
+                <!-- Botón Cancelar -->
+                <button type="submit" class="btn btn-secondary col-3" routerLink="/login">Cancelar</button>
+                <!-- Botón Registrarse -->
+                <button type="submit" class="btn btn-primary col-3" [disabled]="registroForm.invalid">Registrarse</button>
+            </div>
+        </form>
+    </div>
+</div>

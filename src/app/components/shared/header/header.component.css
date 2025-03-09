@@ -1,0 +1,58 @@
+/* Estilos de la barra de navegación en tonos azules */
+.navbar {
+    background: linear-gradient(90deg, #1a73e8, #005cbf); /* Degradado de azul claro a oscuro */
+    color: #ffffff; /* Color de texto en blanco */
+    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-brand {
+    font-weight: bold;
+    color: #ffffff;
+}
+
+.navbar-brand img {
+    margin-right: 10px;
+}
+
+.navbar-brand h2 {
+    color: #ffffff;
+    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+}
+
+.navbar .dropdown-toggle {
+    color: #ffffff;
+    font-weight: bold;
+}
+
+.navbar .dropdown-menu {
+    background-color: #e3f2fd; /* Azul claro para el menú desplegable */
+    border: none;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.dropdown-menu .dropdown-item {
+    color: #005cbf;
+}
+
+.dropdown-menu .dropdown-item:hover {
+    background-color: #d1e7ff; /* Un azul más claro al pasar el ratón */
+    color: #003f7f;
+}
+
+.bi-cart4 {
+    color: #ffffff; /* Icono de carrito en blanco */
+    font-size: 1.5rem;
+}
+
+.navbar .dropdown-toggle:hover,
+.navbar .dropdown-toggle:focus {
+    color: #d1e7ff;
+}
+
+.navbar .text-reset:hover {
+    color: #d1e7ff;
+}
+
+.navbar-light .navbar-toggler {
+    border-color: rgba(255, 255, 255, 0.5);
+}

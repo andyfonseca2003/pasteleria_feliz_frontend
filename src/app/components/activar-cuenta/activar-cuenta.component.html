@@ -1,0 +1,33 @@
+<div class="card col-5 mx-auto">
+    <div class="card-header">
+        Activar cuenta
+    </div>
+    <div class="card-body">
+        <h5 class="card-title text-center">Activa su cuenta</h5>
+        <form [formGroup]="cambioPassword" (ngSubmit)="cambiar()" novalidate="">
+            <div class="mb-3 col-10 mx-auto">
+                <label for="exampleInputEmail1" class="form-label">Email:</label>
+                <input type="text" class="form-control" id="email" aria-describedby="codigoHelp"
+                    formControlName="email">
+            </div>
+            <div class="mb-3 col-10 mx-auto">
+                <label for="exampleInputcodigo" class="form-label">Código:</label>
+                <input type="text" class="form-control" id="codigo" aria-describedby="codigoHelp"
+                    formControlName="codigo">
+            </div>
+            <div class="mb-3 col-10 mx-auto">
+                <label for="exampleInputPassword1" class="form-label">Contraseña nueva:</label>
+                <input type="password" class="form-control" id="password" formControlName="password">
+            </div>
+            <div class="mb-3 col-10 mx-auto">
+                <label for="exampleInputPassword1" class="form-label">Confirmar contraseña:</label>
+                <input type="password" class="form-control" id="confirmarPassword" formControlName="confirmarPassword">
+            </div>
+            <div class="mb-3 d-flex justify-content-center gap-3">
+                <button (click)="regresar()" class="btn btn-secondary col-4">Cancelar</button>
+                <button type="submit" [disabled]="cambioPassword.invalid" class="btn btn-primary col-4">Activar
+                    cuenta</button>
+            </div>
+        </form>
+    </div>
+</div>

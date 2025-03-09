@@ -1,0 +1,38 @@
+<div class="card col-5 mx-auto">
+    <div class="card-header">
+        Login
+    </div>
+    <div class="card-body">
+        <h5 class="card-title text-center">Iniciar sesión en Pasteleria Feliz</h5>
+        <form [formGroup]="crearLogin" (ngSubmit)="iniciar()" novalidate="">
+            <div class="mb-3 col-10 mx-auto">
+                <label for="exampleInputEmail1" class="form-label">Email</label>
+                <input type="email" class="form-control" id="email" aria-describedby="emailHelp"
+                    formControlName="email">
+            </div>
+            <div class="mb-3 col-10 mx-auto">
+                <label for="exampleInputPassword1" class="form-label">Contraseña</label>
+                <input type="password" class="form-control" id="password" formControlName="password">
+            </div>
+            <div class="mb-3 text-center">
+                <button type="submit" [disabled]="crearLogin.invalid" class="btn col-8" style="background-color: #089e00; color: white;">Iniciar sesión</button>
+            </div>
+            <div class="text-center">
+                <a routerLink="/recuperacion" class="card-link">¿Has olvidado tu contraseña?</a>
+            </div>
+            <hr>
+            <div class="mb-3 text-center d-flex justify-content-center">
+                <button (click)="abrirGoogle()" type="button" class="btn col-8 d-flex justify-content-center align-items-center" style="background-color: #bd3c3c; color: white;">
+                    <img src="https://img.icons8.com/?size=512&id=17949&format=png" alt="Google Logo" style="width: 20px; margin-right: 10px;">
+                    Iniciar con Google
+                </button>
+            </div>
+            
+            <!-- <div class="mb-3 text-center">
+                <a type="button" class="btn col-8" routerLink="/registro" style="background-color: #4873d1; color: white;">
+                    Registrarse
+                </a>
+            </div> -->
+        </form>
+    </div>
+</div>
