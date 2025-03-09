@@ -5,6 +5,7 @@ import { MensajeDTO } from '../interfaces/mensaje-dto';
 import { TokenService } from './token.service';
 import { CrearInsumoDTO } from '../interfaces/Insumo/crear-insumo-dto';
 import { InsumoDTO } from '../interfaces/Insumo/insumo-dto';
+import { EditarInsumoDTO } from '../interfaces/Insumo/editar-insumo-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -21,26 +22,18 @@ export class AdministradorService {
     return this.http.post<MensajeDTO>(`${this.adminURL}/supplies`, crearInsumoDTO);
   }
  
-  // public actualizarInsumo(editarInsumoDTO: EditarInsumoDTO): Observable<MensajeDTO> {
-  //   return this.http.put<MensajeDTO>(`${this.adminURL}/supplies/editar`, editarInsumoDTO);
-  // }
- 
+  public actualizarInsumo(editarInsumoDTO: EditarInsumoDTO): Observable<MensajeDTO> {
+    return this.http.put<MensajeDTO>(`${this.adminURL}/supplies/${editarInsumoDTO.id}`, editarInsumoDTO);
+  }
  
   public obtenerInsumo(id: string): Observable<MensajeDTO> {
-    return this.http.get<MensajeDTO>(`${this.adminURL}/supplies/obtener/${id}`);
+    return this.http.get<MensajeDTO>(`${this.adminURL}/supplies/${id}`);
   }
- 
  
   public eliminarInsumo(id: string): Observable<MensajeDTO> {
-    return this.http.delete<MensajeDTO>(`${this.adminURL}/supplies/eliminar/${id}`);
+    return this.http.delete<MensajeDTO>(`${this.adminURL}/supplies/${id}`);
   }
   
-
-   
-  // public listarTipoInsumos(): Observable<MensajeDTO> {
-  //   return this.http.get<MensajeDTO>(`${this.adminURL}/supplies/obtener-tipos`);
-  // }
-
   public listarInsumos(): Observable<InsumoDTO[]> {
     return this.http.get<InsumoDTO[]>(`${this.adminURL}/supplies`);
   }

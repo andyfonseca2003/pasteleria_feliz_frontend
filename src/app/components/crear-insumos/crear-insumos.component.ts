@@ -55,8 +55,9 @@ public crearInsumo() {
   // Llama al servicio para crear el insumo
   this.adminService.crearInsumo(nuevoInsumo).subscribe({
     next: () => {
-      Swal.fire("Éxito!", "Se ha creado un nuevo insumo.", "success");
-      this.location.back(); 
+      Swal.fire("Éxito!", "Se ha creado un nuevo insumo.", "success").then(() => {
+        this.location.back(); // Regresar a la página anterior después de aceptar
+      });
     },
     error: (error) => {
       Swal.fire(error.respuesta)

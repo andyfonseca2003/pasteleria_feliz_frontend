@@ -10,6 +10,7 @@ import { LoginGuard } from './services/guards/permiso.service';
 import { RolesGuard } from './services/guards/roles.service';
 import { ListarInsumosComponent } from './components/listar-insumos/listar-insumos.component';
 import { CrearInsumosComponent } from './components/crear-insumos/crear-insumos.component';
+import { EditarInsumosComponent } from './components/editar-insumos/editar-insumos.component';
 
 
 export const routes: Routes = [
@@ -31,7 +32,9 @@ export const routes: Routes = [
    { path: 'crear-insumos', component: CrearInsumosComponent, 
       //canActivate: [RolesGuard], data: { expectedRole: ["ADMINISTRADOR"] } 
    },
-   // { path: 'editar-cupones/:id', component: EditarCuponesComponent, canActivate: [RolesGuard], data: { expectedRole: ["ADMINISTRADOR"] } },
+   { path: 'editar-insumos/:id', component: EditarInsumosComponent, 
+      //canActivate: [RolesGuard], data: { expectedRole: ["ADMINISTRADOR"] } 
+   },
    { path: "**", pathMatch: "full", redirectTo: "login" },
 
 ];
