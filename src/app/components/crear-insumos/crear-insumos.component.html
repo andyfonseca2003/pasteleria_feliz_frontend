@@ -1,0 +1,50 @@
+<div class="container-fluid row mx-auto">
+  <app-aside class="p-0 m-0 col-2"></app-aside>
+  <div class="col-10 main-content position-relative max-height-vh-100 h-100 border-radius-lg">
+    <div class="card col-12 my-4 mx-auto">
+      <div class="top-header card-header p-0 position-relative mt-n4 mx-3 z-index-2 border-radius rounded bg-dark">
+        <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
+          <h6 class="text-white text-capitalize ps-3">Crear insumos</h6>
+        </div>
+      </div>
+      <div class="card-body">
+        <form [formGroup]="crearInsumoForm" novalidate>
+          <div class="mb-3 col-10 mx-auto">
+            <label>Name: </label>
+            <input type="text" class="form-control" formControlName="name" />
+          </div>
+          <div class="mb-3 col-10 mx-auto">
+            <label for="expiration_date">Expiration date</label>
+            <input type="datetime-local" id="expiration_date" class="form-control" formControlName="expirationDate"
+              required />
+          </div>
+          <div class="mb-3 col-10 mx-auto">
+            <label for="entry_date">Entry date</label>
+            <input type="datetime-local" id="entry_date" class="form-control" formControlName="entryDate" required />
+          </div>
+          <div class="mb-3 col-10 mx-auto">
+            <label>Price: </label>
+            <input type="number" class="form-control" formControlName="price" />
+          </div>
+          <div class="mb-3 col-10 mx-auto">
+            <label>Quantity: </label>
+            <input type="number" class="form-control" formControlName="quantity" />
+          </div>
+          <div class="mb-3 col-10 mx-auto">
+            <label>supplier id: </label>
+            <input type="number" class="form-control" formControlName="supplierID" />
+          </div>
+          <div class="row g-0 col-11 text-end justify-content-end">
+            <div class="mb-3 mx-1 col-auto">
+              <button (click)="regresar()" class="btn btn-secondary col-auto">Cancelar</button>
+            </div>
+            <div class="mb-3 mx-1 col-auto">
+              <button type="submit" (click)="crearInsumo()" class="btn btn-success col-auto">Crear insumo</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+
+</div>

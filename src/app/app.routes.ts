@@ -9,6 +9,7 @@ import { AdministradorComponent } from './components/administrador/administrador
 import { LoginGuard } from './services/guards/permiso.service';
 import { RolesGuard } from './services/guards/roles.service';
 import { ListarInsumosComponent } from './components/listar-insumos/listar-insumos.component';
+import { CrearInsumosComponent } from './components/crear-insumos/crear-insumos.component';
 
 
 export const routes: Routes = [
@@ -25,8 +26,10 @@ export const routes: Routes = [
    },
 
    { path: 'listar-insumos', component: ListarInsumosComponent, 
-      //canActivate: [RolesGuard], data: { expectedRole: ["ADMINISTRADOR"] } },
-   // { path: 'crear-cupones', component: CrearCuponesComponent, canActivate: [RolesGuard], data: { expectedRole: ["ADMINISTRADOR"] } 
+      //canActivate: [RolesGuard], data: { expectedRole: ["ADMINISTRADOR"] } 
+   },
+   { path: 'crear-insumos', component: CrearInsumosComponent, 
+      //canActivate: [RolesGuard], data: { expectedRole: ["ADMINISTRADOR"] } 
    },
    // { path: 'editar-cupones/:id', component: EditarCuponesComponent, canActivate: [RolesGuard], data: { expectedRole: ["ADMINISTRADOR"] } },
    { path: "**", pathMatch: "full", redirectTo: "login" },

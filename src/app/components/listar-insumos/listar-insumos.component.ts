@@ -2,12 +2,13 @@ import { Component } from '@angular/core';
 import { Router, RouterLink } from '@angular/router';
 import { Location } from '@angular/common';
 import { AdministradorService } from '../../services/administrador.service';
+import { AsideComponent } from '../shared/aside/aside.component';
 import Swal from 'sweetalert2';
 
 @Component({
   selector: 'app-listar-insumos',
   standalone: true,
-  imports: [RouterLink],
+  imports: [RouterLink, AsideComponent],
   templateUrl: './listar-insumos.component.html',
   styleUrl: './listar-insumos.component.css'
 })
@@ -56,7 +57,7 @@ export class ListarInsumosComponent {
     this.adminService.listarInsumos().subscribe({
       next: (data) => {
         console.log('Insumos:', data);  // Verifica qué datos estás recibiendo
-        this.insumos = data.respuesta;
+        this.insumos = data;
       },
       error: (error) => {
         Swal.fire(error.respuesta);

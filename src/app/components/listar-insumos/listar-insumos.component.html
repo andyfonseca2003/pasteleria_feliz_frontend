@@ -1,44 +1,147 @@
-<div class="col-11 mx-auto py-1 mb-3">
-    <div class="d-flex justify-content-between align-items-center">
-        <h3>Listar insumos</h3>
-        <button class="btn btn-success" routerLink="/crear-insumos">Crear cupón</button>
-    </div>
-    <div class="mt-5">
-        <div class="card mb-3">
-            <table class="table table-bordered mb-0">
-                <thead class="table-secondary">
-                    <tr>
-                        <th scope="col">Nombre</th>
-                        <th scope="col">Código</th>
-                        <th scope="col">Fecha</th>
-                        <th scope="col">Tipo</th>
-                        <th scope="col">Estado</th>
-                        <th scope="col">Acciones</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    @for (item of insumos; track $index) {
-                    <tr>
-                        <td>{{item.nombre}}</td>
-                        <td>{{item.codigo}}</td>
-                        <td>{{item.fechaVencimiento.split("T")[0]}}</td>
-                        <td>{{item.tipoInsumo}}</td>
-                        <td>{{item.estadoInsumo}}</td>
-                        <td>
-                            <button class="btn btn-primary me-3" (click)="openEditarInsumo(item.id);"><i
-                                    class="bi bi-pencil"></i></button>
-                            <button class="btn btn-danger" (click)="eliminarInsumo(item.id);">
-                                <i class="bi bi-trash3"></i>
-                            </button>
-                        </td>
-                    </tr>
-                    }
-                </tbody>
-            </table>
+<div class="container-fluid row mx-auto">
+    <app-aside class="p-0 m-0 col-2"></app-aside>
+    <div class="col-10 main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+        <!-- End Navbar -->
+        <div class="container-fluid py-2">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card my-4">
+                        <div
+                            class="top-header card-header p-0 position-relative mt-n4 mx-3 z-index-2 border-radius rounded bg-dark">
+                            <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
+                                <h6 class="text-white text-capitalize ps-3">Insumos</h6>
+                            </div>
+                        </div>
+                        <div class="col-auto ms-3">
+                            <a href="/crear-insumos" class="btn btn-primary">
+                                <i class="bi bi-plus-circle"></i>
+                                Crear Insumo
+                            </a>   
+                        </div>
+                        <div class="card-body px-0 pb-2">
+                            <div class="table-responsive p-0">
+                                <table class="table align-items-center mb-0">
+                                    <thead>
+                                        <tr>
+                                            <th
+                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-4">
+                                                id</th>
+                                            <th
+                                                class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                                                name</th>
+                                            <th
+                                                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                price</th>
+                                            <th
+                                                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                entryDate</th>
+                                            <th
+                                                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                expirationDate</th>
+                                            <th
+                                                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                quantity</th>
+                                            <th
+                                                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                createdAt</th>
+                                            <th
+                                                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                updatedAt</th>
+                                            <th class="text-secondary opacity-7"></th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @for (item of insumos; track $index) {
+                                        <tr>
+                                            <td>
+                                                <div class="d-flex px-2 py-1">
+                                                    <div class="d-flex flex-column justify-content-center">
+                                                        <h6 class="mb-0 text-sm">{{item.id}}</h6>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex px-2 py-1">
+                                                    <div class="d-flex flex-column justify-content-center">
+                                                        <h6 class="mb-0 text-sm">{{item.name}}</h6>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex px-2 py-1">
+                                                    <div class="d-flex flex-column justify-content-center">
+                                                        <h6 class="mb-0 text-sm">{{item.price}}</h6>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex px-2 py-1">
+                                                    <div class="d-flex flex-column justify-content-center">
+                                                        <h6 class="mb-0 text-sm">{{item.entryDate}}</h6>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex px-2 py-1">
+                                                    <div class="d-flex flex-column justify-content-center">
+                                                        <h6 class="mb-0 text-sm">{{item.expirationDate}}</h6>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex px-2 py-1">
+                                                    <div class="d-flex flex-column justify-content-center">
+                                                        <h6 class="mb-0 text-sm">{{item.quantity}}</h6>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex px-2 py-1">
+                                                    <div class="d-flex flex-column justify-content-center">
+                                                        <h6 class="mb-0 text-sm">{{item.createdAt}}</h6>
+                                                    </div>
+                                                </div>
+                                            </td>                                            <td>
+                                                <div class="d-flex px-2 py-1">
+                                                    <div class="d-flex flex-column justify-content-center">
+                                                        <h6 class="mb-0 text-sm">{{item.updatedAt}}</h6>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="align-middle">
+                                                <a href="javascript:;" class="text-secondary font-weight-bold text-xs"
+                                                    data-toggle="tooltip" data-original-title="Edit user">
+                                                    Edit
+                                                </a>
+                                            </td>
+                                        </tr>
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
-    <!-- Botón Cancelar debajo de la tabla -->
-    <div class="mt-3 text-start">
-        <button (click)="regresar()" class="btn btn-secondary">Cancelar</button>
-    </div>
 </div>
+
+<!--   Core JS Files   -->
+<script src="../assets/js/core/popper.min.js"></script>
+<script src="../assets/js/core/bootstrap.min.js"></script>
+<script src="../assets/js/plugins/perfect-scrollbar.min.js"></script>
+<script src="../assets/js/plugins/smooth-scrollbar.min.js"></script>
+<script>
+    var win = navigator.platform.indexOf('Win') > -1;
+    if (win && document.querySelector('#sidenav-scrollbar')) {
+        var options = {
+            damping: '0.5'
+        }
+        Scrollbar.init(document.querySelector('#sidenav-scrollbar'), options);
+    }
+</script>
+<!-- Github buttons -->
+<script async defer src="https://buttons.github.io/buttons.js"></script>
+<!-- Control Center for Material Dashboard: parallax effects, scripts for the example pages etc -->
+<script src="../assets/js/material-dashboard.min.js?v=3.2.0"></script>
