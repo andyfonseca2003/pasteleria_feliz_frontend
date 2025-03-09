@@ -1,45 +1,48 @@
 <!-- Navbar -->
-<nav class="navbar navbar-expand-lg">
-  <!-- Container wrapper -->
+<nav class="navbar navbar-expand-lg bg-light shadow-sm">
   <div class="container-fluid">
-    <!-- Navbar brand -->
-    @if(rol == "ADMINISTRADOR"){
-    <a class="navbar-brand my-0 py-0 mt-lg-0 row g-0" routerLink="/Administrador">
-      <h2 class="text-start my-auto col-auto">Pasteleria Feliz</h2>
-    </a>
-    }@else {
-    <a class="navbar-brand my-0 py-0 mt-lg-0 row g-0" routerLink="/inicio">
-      <h2 class="text-start my-auto col-auto">Pasteleria Feliz</h2>
-    </a>
-    }
-    <!-- Right elements -->
-    <div class="d-flex align-items-center">
-      @if (isLogged) {
-      <!-- Icon -->
-      <a class="text-reset me-3" routerLink="/carrito">
-        <i class="bi bi-cart4"></i>
+    <!-- Logo y enlace según el rol -->
+    @if (rol == "ADMINISTRADOR") {
+      <a class="navbar-brand d-flex align-items-center" routerLink="/Administrador">
+        <h2 class="mb-0 fw-bold text-dark">Pastelería Feliz</h2>
       </a>
-      <!-- Avatar -->
-      <div class="dropdown">
-        <a class="dropdown-toggle d-flex align-items-center link-offset-2 link-underline link-underline-opacity-0"
-          id="navbarDropdownMenuAvatar" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-          {{nombre}}
-        </a>
-        <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="navbarDropdownMenuAvatar">
-          <li><a class="dropdown-item" routerLink="/perfil">Mi perfil</a></li>
-          <li><a class="dropdown-item" (click)="logout()">Cerrar sesión</a></li>
-        </ul>
-      </div>
-      }@else {
-      <button type="button" routerLink="/login" class="btn btn-info me-2">Login</button>
-      <button type="button" routerLink="/registro" class="btn btn-info">Registro</button>
-      }
-    </div>
-    <!-- Right elements -->
-  </div>
-  <!-- Container wrapper -->
-</nav>
-<!-- Navbar -->
+    } @else {
+      <a class="navbar-brand d-flex align-items-center" routerLink="/inicio">
+        <h2 class="mb-0 fw-bold text-dark">Pastelería Feliz</h2>
+      </a>
+    }
 
-<!-- Bootstrap Bundle with Popper.js -->
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <!-- Botón de menú para dispositivos móviles -->
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+      aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+
+    <!-- Contenido del navbar -->
+    <div class="collapse navbar-collapse justify-content-end" id="navbarNav">
+      <ul class="navbar-nav align-items-center">
+        <!-- Carrito de compras -->
+        @if (isLogged) {
+          <!-- Menú de usuario -->
+          <li class="nav-item dropdown">
+            <a class="nav-link dropdown-toggle text-dark" id="navbarDropdownMenuAvatar" role="button" data-bs-toggle="dropdown"
+              aria-expanded="false">
+              <i class="bi bi-person-circle"></i>
+              {{ nombre }}
+            </a>
+            <ul class="dropdown-menu dropdown-menu-end">
+              <li><a class="dropdown-item" routerLink="/perfil">Mi perfil</a></li>
+              <li><a class="dropdown-item text-danger" (click)="logout()">Cerrar sesión</a></li>
+            </ul>
+          </li>
+        } @else {
+          <!-- Botones de Login y Registro -->
+          <li class="nav-item">
+            <a routerLink="/login" class="btn btn-outline-primary me-2">Login</a>
+            <a routerLink="/registro" class="btn btn-primary">Registro</a>
+          </li>
+        }
+      </ul>
+    </div>
+  </div>
+</nav>

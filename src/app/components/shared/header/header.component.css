@@ -1,58 +1,91 @@
-/* Estilos de la barra de navegación en tonos azules */
+/* 🍰 Estilos de la barra de navegación con tonos pastel y cálidos */
 .navbar {
-    background: linear-gradient(90deg, #1a73e8, #005cbf); /* Degradado de azul claro a oscuro */
-    color: #ffffff; /* Color de texto en blanco */
-    box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+    background: linear-gradient(90deg, #ffb6c1, #FDC2AB); /* Degradado de rosa pastel a rosa fuerte */
+    /* color: #ffffff !important; Texto en blanco */
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+    padding: 10px 15px;
 }
 
 .navbar-brand {
     font-weight: bold;
     color: #ffffff;
+    display: flex;
+    align-items: center;
 }
 
 .navbar-brand img {
     margin-right: 10px;
+    height: 50px; /* Tamaño adecuado para un logo de pastelería */
 }
 
 .navbar-brand h2 {
     color: #ffffff;
-    font-family:'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+    font-family: 'Pacifico', cursive; /* Fuente cursiva para dar sensación de dulzura */
+    font-size: 1.8rem;
+    margin: 0;
 }
 
+/* 🌸 Estilos del dropdown (Menú del usuario) */
 .navbar .dropdown-toggle {
     color: #ffffff;
     font-weight: bold;
 }
 
 .navbar .dropdown-menu {
-    background-color: #e3f2fd; /* Azul claro para el menú desplegable */
+    background-color: #ffe6f0; /* Fondo rosa pastel */
+    border-radius: 10px;
     border: none;
     box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.15);
 }
 
 .dropdown-menu .dropdown-item {
-    color: #005cbf;
+    color: #d63384; /* Un tono fresa */
+    font-weight: bold;
+    transition: background 0.3s ease-in-out;
 }
 
 .dropdown-menu .dropdown-item:hover {
-    background-color: #d1e7ff; /* Un azul más claro al pasar el ratón */
-    color: #003f7f;
+    background-color: #ff99cc; /* Rosa más intenso al pasar el ratón */
+    color: #ffffff;
+    border-radius: 8px;
 }
 
+/* 🛒 Icono del carrito de compras */
 .bi-cart4 {
     color: #ffffff; /* Icono de carrito en blanco */
-    font-size: 1.5rem;
+    font-size: 1.8rem;
+    transition: transform 0.3s ease-in-out;
 }
 
-.navbar .dropdown-toggle:hover,
-.navbar .dropdown-toggle:focus {
-    color: #d1e7ff;
+.bi-cart4:hover {
+    transform: scale(1.1);
+    color: #ffd700; /* Amarillo pastel */
 }
 
-.navbar .text-reset:hover {
-    color: #d1e7ff;
+/* Botones de Login y Registro */
+.navbar .btn {
+    font-weight: bold;
+    border-radius: 10px;
 }
 
+.navbar .btn-outline-primary {
+    color: #ffffff;
+    border-color: #ffffff;
+}
+
+.navbar .btn-outline-primary:hover {
+    background-color: #ffffff;
+    color: #ff69b4;
+}
+
+/* Estilos del botón de hamburguesa (para móviles) */
 .navbar-light .navbar-toggler {
     border-color: rgba(255, 255, 255, 0.5);
+    background-color: #ffd700; /* Amarillo pastel */
+    border-radius: 5px;
 }
+
+.navbar-toggler-icon {
+    filter: brightness(0) invert(1);
+}
+

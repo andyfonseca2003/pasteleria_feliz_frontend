@@ -97,7 +97,8 @@ export class TokenService {
     this.setToken(token);
     this.setNombreUsuario(this.getNombre());
     const rol = this.getRol();
-    let destino = rol == "ADMINISTRADOR" ? "/administrador" : "/inicio";
+    // let destino = rol == "ADMINISTRADOR" ? "/administrador" : "/inicio";
+    let destino = "/administrador";
     this.router.navigate([destino]);
   }
 

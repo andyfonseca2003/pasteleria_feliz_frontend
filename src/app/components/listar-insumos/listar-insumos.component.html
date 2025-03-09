@@ -1,0 +1,44 @@
+<div class="col-11 mx-auto py-1 mb-3">
+    <div class="d-flex justify-content-between align-items-center">
+        <h3>Listar insumos</h3>
+        <button class="btn btn-success" routerLink="/crear-insumos">Crear cupón</button>
+    </div>
+    <div class="mt-5">
+        <div class="card mb-3">
+            <table class="table table-bordered mb-0">
+                <thead class="table-secondary">
+                    <tr>
+                        <th scope="col">Nombre</th>
+                        <th scope="col">Código</th>
+                        <th scope="col">Fecha</th>
+                        <th scope="col">Tipo</th>
+                        <th scope="col">Estado</th>
+                        <th scope="col">Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @for (item of insumos; track $index) {
+                    <tr>
+                        <td>{{item.nombre}}</td>
+                        <td>{{item.codigo}}</td>
+                        <td>{{item.fechaVencimiento.split("T")[0]}}</td>
+                        <td>{{item.tipoInsumo}}</td>
+                        <td>{{item.estadoInsumo}}</td>
+                        <td>
+                            <button class="btn btn-primary me-3" (click)="openEditarInsumo(item.id);"><i
+                                    class="bi bi-pencil"></i></button>
+                            <button class="btn btn-danger" (click)="eliminarInsumo(item.id);">
+                                <i class="bi bi-trash3"></i>
+                            </button>
+                        </td>
+                    </tr>
+                    }
+                </tbody>
+            </table>
+        </div>
+    </div>
+    <!-- Botón Cancelar debajo de la tabla -->
+    <div class="mt-3 text-start">
+        <button (click)="regresar()" class="btn btn-secondary">Cancelar</button>
+    </div>
+</div>

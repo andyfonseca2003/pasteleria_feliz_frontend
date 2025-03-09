@@ -24,7 +24,7 @@ export class LoginComponent {
   private crearFormulario() {
     this.crearLogin = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.maxLength(20), Validators.minLength(7)]],
+      password: ['', [Validators.required, Validators.maxLength(20), Validators.minLength(6)]],
     },
     );
   }
@@ -40,7 +40,7 @@ export class LoginComponent {
         Swal.fire({
           icon: 'error',
           title: 'Error',
-          text: error.error.respuesta
+          text: error.error.respuesta.token
         });
       },
     });

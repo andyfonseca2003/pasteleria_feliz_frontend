@@ -23,7 +23,7 @@ export class AuthService {
    }
       
    public iniciarSesion(loginDTO: LoginDTO): Observable<MensajeDTO> {
-    return this.http.post<MensajeDTO>(`${this.authURL}/iniciar-sesion`, loginDTO);
+    return this.http.post<MensajeDTO>(`${this.authURL}/login`, loginDTO);
    }
 
    public activarCuenta(activarCuenta: ActivarCuentaDTO): Observable<MensajeDTO> {

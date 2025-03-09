@@ -6,31 +6,29 @@ import { CambioComponent } from './components/cambio/cambio.component';
 import { RecuperacionComponent } from './components/recuperacion/recuperacion.component';
 import { AdministradorComponent } from './components/administrador/administrador.component';
 
+import { LoginGuard } from './services/guards/permiso.service';
+import { RolesGuard } from './services/guards/roles.service';
+import { ListarInsumosComponent } from './components/listar-insumos/listar-insumos.component';
+
+
 export const routes: Routes = [
-   { path: 'login', component: LoginComponent, 
-    //canActivate: [LoginGuard] 
+   { path: 'login', component: LoginComponent, canActivate: [LoginGuard] },
+   { path: 'registro', component: RegistroComponent, canActivate: [LoginGuard] },
+   { path: 'activar-cuenta', component: ActivarCuentaComponent, canActivate: [LoginGuard] },
+   { path: 'cambio', component: CambioComponent, canActivate: [LoginGuard] },
+   { path: 'recuperacion', component: RecuperacionComponent, canActivate: [LoginGuard] },
 
+   {
+      path: 'administrador', component: AdministradorComponent,
+      //canActivate: [RolesGuard], 
+      //data: { expectedRole: ["ADMINISTRADOR"] } 
    },
-   { path: 'registro', component: RegistroComponent, 
-    //canActivate: [LoginGuard] 
 
+   { path: 'listar-insumos', component: ListarInsumosComponent, 
+      //canActivate: [RolesGuard], data: { expectedRole: ["ADMINISTRADOR"] } },
+   // { path: 'crear-cupones', component: CrearCuponesComponent, canActivate: [RolesGuard], data: { expectedRole: ["ADMINISTRADOR"] } 
    },
-   { path: 'activar-cuenta', component: ActivarCuentaComponent, 
-    //canActivate: [LoginGuard]
-
-   },
-   { path: 'cambio', component: CambioComponent, 
-    //canActivate: [LoginGuard] 
-
-   },
-   { path: 'recuperacion', component: RecuperacionComponent, 
-    //canActivate: [LoginGuard] 
-    },
-
-   { path: 'administrador', component: AdministradorComponent, 
-    //canActivate: [RolesGuard], data: { expectedRole: ["ADMINISTRADOR"] } 
-    },
-
+   // { path: 'editar-cupones/:id', component: EditarCuponesComponent, canActivate: [RolesGuard], data: { expectedRole: ["ADMINISTRADOR"] } },
    { path: "**", pathMatch: "full", redirectTo: "login" },
 
 ];
