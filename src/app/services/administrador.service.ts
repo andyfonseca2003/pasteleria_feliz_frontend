@@ -13,7 +13,7 @@ import { EditarInsumoDTO } from '../interfaces/Insumo/editar-insumo-dto';
 export class AdministradorService {
 
 
-  private adminURL = "http://localhost:8080/api";
+  private adminURL = "https://ing-soft-iii-pasteleria.onrender.com/api";
 
 
   constructor(private http: HttpClient, private tokenService: TokenService) { }

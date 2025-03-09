@@ -36,12 +36,8 @@ export class ListarInsumosComponent {
       if (result.isConfirmed) {
         this.adminService.eliminarInsumo(id).subscribe({
           next: (data) => {
-            if (!data.error) {
               Swal.fire('Eliminado', 'El insumo ha sido eliminado correctamente', 'success');
               this.showInsumos(); // Recargar la lista de insumos después de eliminar
-            } else {
-              Swal.fire('Error', 'No se pudo eliminar el insumo', 'error');
-            }
           },
           error: (error) => {
             console.error('Error al eliminar el insumo:', error);
