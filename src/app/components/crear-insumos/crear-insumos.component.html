@@ -32,7 +32,11 @@
           </div>
           <div class="mb-3 col-10 mx-auto">
             <label>supplier id: </label>
-            <input type="number" class="form-control" formControlName="supplierID" />
+            <select class="form-control" formControlName="supplierID" >
+              @for (item of proveedores; track $index) {
+                <option value="{{item.id}}">{{item.name}}</option>
+              }
+            </select>
           </div>
           <div class="row g-0 col-11 text-end justify-content-end">
             <div class="mb-3 mx-1 col-auto">
@@ -46,5 +50,4 @@
       </div>
     </div>
   </div>
-
 </div>

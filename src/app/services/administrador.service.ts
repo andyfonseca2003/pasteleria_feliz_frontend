@@ -6,6 +6,7 @@ import { TokenService } from './token.service';
 import { CrearInsumoDTO } from '../interfaces/Insumo/crear-insumo-dto';
 import { InsumoDTO } from '../interfaces/Insumo/insumo-dto';
 import { EditarInsumoDTO } from '../interfaces/Insumo/editar-insumo-dto';
+import { ProveedorDTO } from '../interfaces/Proveedor/proveedor-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -36,5 +37,9 @@ export class AdministradorService {
   
   public listarInsumos(): Observable<InsumoDTO[]> {
     return this.http.get<InsumoDTO[]>(`${this.adminURL}/supplies`);
+  }
+
+  public listarProveedores(): Observable<ProveedorDTO[]> {
+    return this.http.get<ProveedorDTO[]>(`${this.adminURL}/suppliers`);
   }
 }

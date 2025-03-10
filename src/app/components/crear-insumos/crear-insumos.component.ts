@@ -3,7 +3,7 @@ import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Location } from '@angular/common';
-import { CrearInsumoDTO } from '../../interfaces/Insumo/crear-insumo-dto'; 
+import { CrearInsumoDTO } from '../../interfaces/Insumo/crear-insumo-dto';
 import Swal from 'sweetalert2';
 import { AsideComponent } from '../shared/aside/aside.component';
 import { AdministradorService } from '../../services/administrador.service';
@@ -18,11 +18,13 @@ import { AdministradorService } from '../../services/administrador.service';
 export class CrearInsumosComponent {
 
   crearInsumoForm!: FormGroup;  // Formulario reactivo
+  proveedores: any[] = [];
 
-  constructor(private formBuilder: FormBuilder, 
-              private location: Location,
-              private adminService: AdministradorService,
-              private router: Router) {
+  constructor(private formBuilder: FormBuilder,
+    private location: Location,
+    private adminService: AdministradorService,
+    private router: Router) {
+    this.showProveedores();
     this.crearFormulario();  // Inicializa el formulario
   }
 
@@ -41,30 +43,44 @@ export class CrearInsumosComponent {
     });
   }
 
-// Método para crear el insumo
-public crearInsumo() {
-  // Verifica si el formulario es inválido
-  if (this.crearInsumoForm.invalid) {
-    Swal.fire('Formulario incompleto', 'Por favor, rellene todos los campos correctamente.', 'error');
-    return;  // Si el formulario es inválido, no hace nada
+  // Método para crear el insumo
+  public crearInsumo() {
+    // Verifica si el formulario es inválido
+    if (this.crearInsumoForm.invalid) {
+      Swal.fire('Formulario incompleto', 'Por favor, rellene todos los campos correctamente.', 'error');
+      return;  // Si el formulario es inválido, no hace nada
+    }
+
+    // Crea el objeto DTO con los valores del formulario
+    const nuevoInsumo: CrearInsumoDTO = this.crearInsumoForm.value;
+
+    // Llama al servicio para crear el insumo
+    this.adminService.crearInsumo(nuevoInsumo).subscribe({
+      next: () => {
+        Swal.fire("Éxito!", "Se ha creado un nuevo insumo.", "success").then(() => {
+          this.location.back(); // Regresar a la página anterior después de aceptar
+        });
+      },
+      error: (error) => {
+        Swal.fire(error.respuesta)
+        console.log(error);
+      },
+    });
   }
 
-  // Crea el objeto DTO con los valores del formulario
-  const nuevoInsumo: CrearInsumoDTO = this.crearInsumoForm.value;
-
-  // Llama al servicio para crear el insumo
-  this.adminService.crearInsumo(nuevoInsumo).subscribe({
-    next: () => {
-      Swal.fire("Éxito!", "Se ha creado un nuevo insumo.", "success").then(() => {
-        this.location.back(); // Regresar a la página anterior después de aceptar
-      });
-    },
-    error: (error) => {
-      Swal.fire(error.respuesta)
-      console.log(error);
-    },
-  });
-}
+  // Método para mostrar los insumos
+  public showProveedores() {
+    this.adminService.listarProveedores().subscribe({
+      next: (data) => {
+        console.log('Proveedores:', data);  // Verifica qué datos estás recibiendo
+        this.proveedores = data;
+      },
+      error: (error) => {
+        Swal.fire(error.respuesta);
+        console.log(error.error);
+      }
+    });
+  }
 
   // Método para regresar a la página anterior
   regresar() {

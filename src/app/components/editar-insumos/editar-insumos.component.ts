@@ -71,7 +71,7 @@ export class EditarInsumosComponent {
     // Llamar al servicio para actualizar el insumo
     this.adminService.actualizarInsumo(editarInsumoDTO).subscribe({
       next: (data) => {
-        Swal.fire('Éxito', 'Cupón actualizado correctamente', 'success').then(() => {
+        Swal.fire('Éxito', 'Insumo actualizado correctamente', 'success').then(() => {
           this.location.back(); // Regresar a la página anterior después de aceptar
         });;
       },
