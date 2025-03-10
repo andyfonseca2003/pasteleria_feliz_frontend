@@ -37,8 +37,8 @@ export class CrearInsumosComponent {
       price: ['', [Validators.required]],  // Fecha de vencimiento
       quantity: ['', [Validators.required]],  // Tipo de insumo
       supplierID: ['', [Validators.required]],  // Tipo de insumo
-      createdAt: "2023-09-17T09:00:00",
-      updatedAt: "2023-09-17T09:05:00",
+      createdAt: new Date().toISOString(),  // Asigna la fecha actual en formato ISO
+      updatedAt: new Date().toISOString(),  // También puedes hacer esto para `updatedAt`
       userModify: 1  // Tipo de insumo
     });
   }

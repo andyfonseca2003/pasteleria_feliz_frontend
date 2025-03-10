@@ -10,31 +10,31 @@
       <div class="card-body">
         <form [formGroup]="crearInsumoForm" novalidate>
           <div class="mb-3 col-10 mx-auto">
-            <label>Name: </label>
+            <label>Nombre</label>
             <input type="text" class="form-control" formControlName="name" />
           </div>
           <div class="mb-3 col-10 mx-auto">
-            <label for="expiration_date">Expiration date</label>
+            <label for="expiration_date">Fecha de expiración</label>
             <input type="datetime-local" id="expiration_date" class="form-control" formControlName="expirationDate"
               required />
           </div>
           <div class="mb-3 col-10 mx-auto">
-            <label for="entry_date">Entry date</label>
+            <label for="entry_date">Fecha de entrada</label>
             <input type="datetime-local" id="entry_date" class="form-control" formControlName="entryDate" required />
           </div>
           <div class="mb-3 col-10 mx-auto">
-            <label>Price: </label>
+            <label>Precio</label>
             <input type="number" class="form-control" formControlName="price" />
           </div>
           <div class="mb-3 col-10 mx-auto">
-            <label>Quantity: </label>
+            <label>Cantidad</label>
             <input type="number" class="form-control" formControlName="quantity" />
           </div>
           <div class="mb-3 col-10 mx-auto">
-            <label>supplier id: </label>
-            <select class="form-control" formControlName="supplierID" >
+            <label>Proveedor</label>
+            <select class="form-control border" formControlName="supplierID" id="supplierID">
               @for (item of proveedores; track $index) {
-                <option value="{{item.id}}">{{item.name}}</option>
+              <option value="{{item.supplierID}}">{{item.name}}</option>
               }
             </select>
           </div>
