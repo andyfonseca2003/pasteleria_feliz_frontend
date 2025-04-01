@@ -14,11 +14,11 @@ import Swal from 'sweetalert2';
 })
 export class ListarInsumosComponent {
   insumos: any[] = [];
-  
-  
+
+
   constructor(private location: Location,
-    private adminService: AdministradorService,
-    private router:Router,) {
+              private adminService: AdministradorService,
+              private router:Router,) {
     this.showInsumos(); // Mostrar insumos cuando se carga el componente
   }
 
@@ -36,8 +36,8 @@ export class ListarInsumosComponent {
       if (result.isConfirmed) {
         this.adminService.eliminarInsumo(id).subscribe({
           next: (data) => {
-              Swal.fire('Eliminado', 'El insumo ha sido eliminado correctamente', 'success');
-              this.showInsumos(); // Recargar la lista de insumos después de eliminar
+            Swal.fire('Eliminado', 'El insumo ha sido eliminado correctamente', 'success');
+            this.showInsumos(); // Recargar la lista de insumos después de eliminar
           },
           error: (error) => {
             console.error('Error al eliminar el insumo:', error);
@@ -65,7 +65,7 @@ export class ListarInsumosComponent {
   public openEditarInsumo(id: string){
     this.router.navigate(['/editar-insumos/'+id])
   }
-  
+
   // Método para regresar a la página anterior
   regresar() {
     this.location.back();

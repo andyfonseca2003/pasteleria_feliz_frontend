@@ -1,0 +1,26 @@
+.top-header {
+  top: -15px;
+}
+
+/* Estilos para mensajes de error en los campos */
+.invalid-feedback {
+  color: #dc3545;
+  font-size: 0.875em;
+}
+
+/* Mejora la apariencia de los inputs */
+.form-control {
+  border-radius: 0.375rem;
+  padding: 0.5rem 0.75rem;
+}
+
+/* Estilo para botones */
+.btn-success {
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+.btn-secondary {
+  background-color: #6c757d;
+  border-color: #6c757d;
+}

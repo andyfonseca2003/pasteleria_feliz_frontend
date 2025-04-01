@@ -1,0 +1,21 @@
+.top-header {
+  top: -15px;
+}
+
+/* Estilos para los badges de estado */
+.bg-success {
+  background-color: #28a745 !important;
+}
+
+.bg-danger {
+  background-color: #dc3545 !important;
+}
+
+/* Ajustes adicionales para la tabla */
+.table-responsive {
+  overflow-x: auto;
+}
+
+.table th {
+  white-space: nowrap;
+}
