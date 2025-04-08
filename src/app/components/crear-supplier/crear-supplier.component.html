@@ -1,0 +1,63 @@
+<div class="container-fluid row mx-auto">
+  <app-aside class="p-0 m-0 col-2"></app-aside>
+  <div class="col-10 main-content position-relative max-height-vh-100 h-100 border-radius-lg">
+    <div class="card col-12 my-4 mx-auto">
+      <!-- Encabezado de la tarjeta -->
+      <div class="top-header card-header p-0 position-relative mt-n4 mx-3 z-index-2 border-radius rounded bg-dark">
+        <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
+          <h6 class="text-white text-capitalize ps-3">Crear Proveedor</h6>
+        </div>
+      </div>
+
+      <!-- Cuerpo del formulario -->
+      <div class="card-body">
+        <form [formGroup]="crearSupplierForm" novalidate>
+          <!-- Nombre del proveedor -->
+          <div class="mb-3 col-10 mx-auto">
+            <label>Nombre: </label>
+            <input type="text" class="form-control" formControlName="name"
+                   placeholder="Ej: Distribuidora Alimentos S.A." />
+          </div>
+
+          <!-- Documento/NIT del proveedor -->
+          <div class="mb-3 col-10 mx-auto">
+            <label>Documento/NIT: </label>
+            <input type="text" class="form-control" formControlName="supplierID"
+                   placeholder="Ej: 901234567-8" />
+          </div>
+
+          <!-- Dirección -->
+          <div class="mb-3 col-10 mx-auto">
+            <label>Dirección: </label>
+            <input type="text" class="form-control" formControlName="address"
+                   placeholder="Ej: Calle 123 #45-67" />
+          </div>
+
+          <!-- Teléfono -->
+          <div class="mb-3 col-10 mx-auto">
+            <label>Teléfono: </label>
+            <input type="tel" class="form-control" formControlName="phone"
+                   placeholder="Ej: +573001234567" />
+          </div>
+
+          <!-- Email -->
+          <div class="mb-3 col-10 mx-auto">
+            <label>Email: </label>
+            <input type="email" class="form-control" formControlName="email"
+                   placeholder="Ej: contacto@proveedor.com" />
+          </div>
+
+          <!-- Botones de acción -->
+          <div class="row g-0 col-11 text-end justify-content-end">
+            <div class="mb-3 mx-1 col-auto">
+              <button (click)="regresar()" class="btn btn-secondary col-auto">Cancelar</button>
+            </div>
+            <div class="mb-3 mx-1 col-auto">
+              <button type="submit" (click)="crearSupplier()" class="btn btn-success col-auto">Crear Proveedor</button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
