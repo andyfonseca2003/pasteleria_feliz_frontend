@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from '@angular/router';
 import { Location } from '@angular/common';
 import { AdministradorService } from '../../services/administrador.service';
 import Swal from 'sweetalert2';
@@ -23,6 +23,7 @@ export class EditarInsumosComponent {
   constructor(private formBuilder: FormBuilder, private location: Location,
     private activatedRoute: ActivatedRoute,
     private adminService: AdministradorService,
+    private router: Router
   ) {
     this.crearFormulario();
 
@@ -71,9 +72,9 @@ export class EditarInsumosComponent {
     // Llamar al servicio para actualizar el insumo
     this.adminService.actualizarInsumo(editarInsumoDTO).subscribe({
       next: (data) => {
-        Swal.fire('Éxito', 'Cupón actualizado correctamente', 'success').then(() => {
-          this.location.back(); // Regresar a la página anterior después de aceptar
-        });;
+        Swal.fire('Éxito', 'Insumo actualizado correctamente', 'success').then(() => {
+          this.router.navigate(["/listar-insumos"]);
+        });
       },
       error: (error) => {
         Swal.fire('Error', 'Hubo un problema al actualizar el insumo', 'error');

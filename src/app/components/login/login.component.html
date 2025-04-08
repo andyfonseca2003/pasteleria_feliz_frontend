@@ -1,6 +1,12 @@
 <div class="card col-5 mx-auto">
     <div class="card-body">
         <h5 class="card-title text-center">Iniciar sesión en Pasteleria Feliz</h5>
+        <div class="justify-content-center">
+            <div class="col-12 text-center">
+                <img class="col-2 mx-auto" src="https://cashhpkxslzqkicqbnet.supabase.co/storage/v1/object/sign/imagenes/logo.png?token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1cmwiOiJpbWFnZW5lcy9sb2dvLnBuZyIsImlhdCI6MTc0MzQ2ODE5NiwiZXhwIjoxNzc1MDA0MTk2fQ.ljFjSUzOZkUiWXW8I2Jk1TC5IMLAAvjS6_RYCJX_R1U"
+                alt="">
+            </div>
+        </div>
         <form [formGroup]="crearLogin" (ngSubmit)="iniciar()" novalidate="">
             <div class="mb-3 col-10 mx-auto">
                 <label for="exampleInputEmail1" class="form-label">Email</label>
@@ -12,24 +18,29 @@
                 <input type="password" class="form-control" id="password" formControlName="password">
             </div>
             <div class="mb-3 text-center">
-                <button type="submit" [disabled]="crearLogin.invalid" class="btn col-8" style="background-color: #089e00; color: white;">Iniciar sesión</button>
+                <button type="submit" [disabled]="crearLogin.invalid" class="btn col-8"
+                    style="background-color: #5ac15d; color: white;">Iniciar sesión</button>
             </div>
             <div class="text-center">
                 <a routerLink="/recuperacion" class="card-link">¿Has olvidado tu contraseña?</a>
             </div>
             <hr>
             <div class="mb-3 text-center d-flex justify-content-center">
-                <button (click)="abrirGoogle()" type="button" class="btn col-8 d-flex justify-content-center align-items-center" style="background-color: #bd3c3c; color: white;">
-                    <img src="https://img.icons8.com/?size=512&id=17949&format=png" alt="Google Logo" style="width: 20px; margin-right: 10px;">
+                <button (click)="abrirGoogle()" type="button"
+                    class="btn col-8 d-flex justify-content-center align-items-center"
+                    style="background-color: #bd3c3c; color: white;">
+                    <img src="https://img.icons8.com/?size=512&id=17949&format=png" alt="Google Logo"
+                        style="width: 20px; margin-right: 10px;">
                     Iniciar con Google
                 </button>
             </div>
-            
-            <!-- <div class="mb-3 text-center">
-                <a type="button" class="btn col-8" routerLink="/registro" style="background-color: #4873d1; color: white;">
+
+            <div class="mb-3 text-center">
+                <a type="button" class="btn col-8" routerLink="/registro"
+                    style="background-color: #4873d1; color: white;">
                     Registrarse
                 </a>
-            </div> -->
+            </div>
         </form>
     </div>
 </div>

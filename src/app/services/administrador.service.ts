@@ -39,6 +39,7 @@ export class AdministradorService {
   public listarInsumos(): Observable<InsumoDTO[]> {
     return this.http.get<InsumoDTO[]>(`${this.adminURL}/supplies`);
   }
+
   // Método corregido para crear supplier
   public crearSupplier(crearSupplierDTO: CrearSupplierDTO): Observable<SupplierDTO> {
     const body = {
@@ -63,5 +64,4 @@ export class AdministradorService {
   public eliminarSupplier(id: string): Observable<MensajeDTO> {
     return this.http.delete<MensajeDTO>(`${this.adminURL}/suppliers/${id}`);
   }
-
 }
