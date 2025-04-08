@@ -73,7 +73,7 @@ export class CrearInsumosComponent {
 
   // Método para mostrar los insumos
   public showProveedores() {
-    this.adminService.listarProveedores().subscribe({
+    this.adminService.listarSuppliers().subscribe({
       next: (data) => {
         console.log('Proveedores:', data);  // Verifica qué datos estás recibiendo
         this.proveedores = data;
