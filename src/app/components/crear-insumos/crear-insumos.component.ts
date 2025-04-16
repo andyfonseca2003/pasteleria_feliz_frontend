@@ -7,12 +7,12 @@ import { CrearInsumoDTO } from '../../interfaces/Insumo/crear-insumo-dto';
 import Swal from 'sweetalert2';
 import { AsideComponent } from '../shared/aside/aside.component';
 import { AdministradorService } from '../../services/administrador.service';
-import { Select2, Select2Data, Select2Hint, Select2Label } from 'ng-select2-component';
+import { Select2Data } from 'ng-select2-component';
 
 @Component({
   selector: 'app-crear-insumos',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, AsideComponent, Select2, Select2Hint, Select2Label],
+  imports: [ReactiveFormsModule, CommonModule, AsideComponent],
   templateUrl: './crear-insumos.component.html',
   styleUrl: './crear-insumos.component.css'
 })
@@ -73,7 +73,7 @@ export class CrearInsumosComponent {
 
   // Método para mostrar los insumos
   public showProveedores() {
-    this.adminService.listarProveedores().subscribe({
+    this.adminService.listarSuppliers().subscribe({
       next: (data) => {
         console.log('Proveedores:', data);  // Verifica qué datos estás recibiendo
         this.proveedores = data;

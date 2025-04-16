@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { ActivatedRoute, Router, RouterLink } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { AdministradorService } from '../../services/administrador.service';
 import Swal from 'sweetalert2';
@@ -11,7 +11,7 @@ import { AsideComponent } from '../shared/aside/aside.component';
 @Component({
   selector: 'app-editar-insumos',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, RouterLink, AsideComponent],
+  imports: [ReactiveFormsModule, CommonModule, AsideComponent],
   templateUrl: './editar-insumos.component.html',
   styleUrl: './editar-insumos.component.css'
 })

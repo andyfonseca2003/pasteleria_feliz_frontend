@@ -15,7 +15,7 @@ import {SupplierDTO} from '../interfaces/supplier/supplier-dto';
 export class AdministradorService {
 
 
-  private adminURL = "https://ing-soft-iii-pasteleria.onrender.com/api";
+  private adminURL = "http://localhost:8080/api";
 
 
   constructor(private http: HttpClient, private tokenService: TokenService) { }

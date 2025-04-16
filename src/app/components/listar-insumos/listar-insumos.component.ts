@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { Router, RouterLink } from '@angular/router';
+import { Router } from '@angular/router';
 import { Location } from '@angular/common';
 import { AdministradorService } from '../../services/administrador.service';
 import { AsideComponent } from '../shared/aside/aside.component';
@@ -8,7 +8,7 @@ import Swal from 'sweetalert2';
 @Component({
   selector: 'app-listar-insumos',
   standalone: true,
-  imports: [RouterLink, AsideComponent],
+  imports: [ AsideComponent],
   templateUrl: './listar-insumos.component.html',
   styleUrl: './listar-insumos.component.css'
 })
