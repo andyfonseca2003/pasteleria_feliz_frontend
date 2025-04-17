@@ -1,18 +1,19 @@
 <div class="container-fluid row mx-auto">
   <app-aside class="p-0 m-0 col-2"></app-aside>
-  <div class="col-10 main-content position-relative max-height-vh-100 h-100 border-radius-lg">
+  <div class="col-10 main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
     <!-- End Navbar -->
     <div class="container-fluid py-2">
       <div class="row">
         <div class="col-12">
           <div class="card my-4">
-            <div class="top-header card-header p-0 position-relative mt-n4 mx-3 z-index-2 border-radius rounded bg-dark">
+            <div
+              class="top-header card-header p-0 position-relative mt-n4 mx-3 z-index-2 border-radius rounded bg-dark">
               <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
                 <h6 class="text-white text-capitalize ps-3">Proveedores</h6>
               </div>
             </div>
             <div class="col-auto ms-3">
-              <a href="/crear-supplier" class="btn btn-primary">
+              <a [routerLink]="['/crear-suppliers']" class="btn btn-primary">
                 <i class="bi bi-plus-circle"></i>
                 Crear Proveedor
               </a>
@@ -21,104 +22,114 @@
               <div class="table-responsive p-0">
                 <table class="table align-items-center mb-0">
                   <thead>
-                  <tr>
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-4">ID</th>
-                    <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">Nombre</th>
-                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Documento</th>
-                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Dirección</th>
-                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Teléfono</th>
-                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Email</th>
-                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Estado</th>
-                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Creado</th>
-                    <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">Actualizado</th>
-                    <th class="text-secondary opacity-7"></th>
-                  </tr>
+                    <tr>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-4">
+                        ID</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
+                        Nombre</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                        Email</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                        Teléfono</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                        Contacto</th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                        Acciones</th>
+                    </tr>
                   </thead>
                   <tbody>
-                    @for (supplier of suppliers; track $index) {
-                      <tr>
-                        <td>
-                          <div class="d-flex px-2 py-1">
-                            <div class="d-flex flex-column justify-content-center">
-                              <h6 class="mb-0 text-sm">{{supplier.id}}</h6>
-                            </div>
+                    @for (item of suppliers; track $index) {
+                    <tr>
+                      <td>
+                        <div class="d-flex px-2 py-1">
+                          <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm">{{item.id}}</h6>
                           </div>
-                        </td>
-                        <td>
-                          <div class="d-flex px-2 py-1">
-                            <div class="d-flex flex-column justify-content-center">
-                              <h6 class="mb-0 text-sm">{{supplier.name}}</h6>
-                            </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="d-flex px-2 py-1">
+                          <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm">{{item.name}}</h6>
                           </div>
-                        </td>
-                        <td>
-                          <div class="d-flex px-2 py-1">
-                            <div class="d-flex flex-column justify-content-center">
-                              <h6 class="mb-0 text-sm">{{supplier.supplierID}}</h6>
-                            </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="d-flex px-2 py-1 justify-content-center">
+                          <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm">{{item.email}}</h6>
                           </div>
-                        </td>
-                        <td>
-                          <div class="d-flex px-2 py-1">
-                            <div class="d-flex flex-column justify-content-center">
-                              <h6 class="mb-0 text-sm">{{supplier.address}}</h6>
-                            </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="d-flex px-2 py-1 justify-content-center">
+                          <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm">{{item.phone}}</h6>
                           </div>
-                        </td>
-                        <td>
-                          <div class="d-flex px-2 py-1">
-                            <div class="d-flex flex-column justify-content-center">
-                              <h6 class="mb-0 text-sm">{{supplier.phone}}</h6>
-                            </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="d-flex px-2 py-1 justify-content-center">
+                          <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm">{{item.contactPerson}}</h6>
                           </div>
-                        </td>
-                        <td>
-                          <div class="d-flex px-2 py-1">
-                            <div class="d-flex flex-column justify-content-center">
-                              <h6 class="mb-0 text-sm">{{supplier.email}}</h6>
-                            </div>
-                          </div>
-                        </td>
-                        <td>
-                          <div class="d-flex px-2 py-1">
-                            <div class="d-flex flex-column justify-content-center">
-                                                        <span class="badge" [ngClass]="{
-                                                            'bg-success': supplier.status === 'ACTIVO',
-                                                            'bg-danger': supplier.status === 'INACTIVO'
-                                                        }">
-                                                            {{supplier.status}}
-                                                        </span>
-                            </div>
-                          </div>
-                        </td>
-                        <td>
-                          <div class="d-flex px-2 py-1">
-                            <div class="d-flex flex-column justify-content-center">
-                              <h6 class="mb-0 text-sm">{{supplier.createdAt | date:'short'}}</h6>
-                            </div>
-                          </div>
-                        </td>
-                        <td>
-                          <div class="d-flex px-2 py-1">
-                            <div class="d-flex flex-column justify-content-center">
-                              <h6 class="mb-0 text-sm">{{supplier.updatedAt | date:'short'}}</h6>
-                            </div>
-                          </div>
-                        </td>
-                        <td class="align-middle">
-                          <a href="/editar-supplier/{{supplier.id}}" class="btn btn-secondary">
-                            Editar
-                          </a>
-                        </td>
-                        <td class="align-middle">
-                          <button (click)="eliminarSupplier(supplier.id)" class="btn btn-danger">
-                            Eliminar
+                        </div>
+                      </td>
+                      <td class="align-middle text-center">
+                        <div class="btn-group btn-group-sm" role="group">
+                          <button class="btn btn-info btn-sm" (click)="showReviewModal(item)" title="Ver reseña">
+                            <i class="bi bi-star"></i>
                           </button>
-                        </td>
-                      </tr>
+
+                          <button class="btn btn-secondary btn-sm" (click)="openEditarSupplier(item.id)"
+                            title="Editar proveedor">
+                            <i class="bi bi-pencil"></i>
+                          </button>
+
+                          <button (click)="eliminarSupplier(item.id)" class="btn btn-danger btn-sm"
+                            title="Eliminar proveedor">
+                            <i class="bi bi-trash"></i>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
                     }
                   </tbody>
                 </table>
+                <!-- Paginador -->
+                <div class="pagination-container d-flex justify-content-center mt-4">
+                  <nav aria-label="Navegación de proveedores">
+                    <ul class="pagination">
+                      <li class="page-item" [class.disabled]="currentPage === 0">
+                        <button class="page-link" (click)="goToPreviousPage()" aria-label="Anterior">
+                          <i class="bi bi-chevron-left"></i>
+                        </button>
+                      </li>
+
+                      <!-- Mostrar hasta 5 páginas (la actual y 2 antes/después) -->
+                      @for (pageIdx of getPaginationRange(); track pageIdx) {
+                      <li class="page-item" [class.active]="pageIdx === currentPage">
+                        <button class="page-link" (click)="goToPage(pageIdx)">{{ pageIdx + 1 }}</button>
+                      </li>
+                      }
+
+                      <li class="page-item" [class.disabled]="currentPage === totalPages - 1">
+                        <button class="page-link" (click)="goToNextPage()" aria-label="Siguiente">
+                          <i class="bi bi-chevron-right"></i>
+                        </button>
+                      </li>
+                    </ul>
+                  </nav>
+                </div>
+
+                <!-- Información de paginación -->
+                <div class="text-center mt-3">
+                  <span class="pagination-info">
+                    <i class="bi bi-file-earmark-text me-1"></i>
+                    Mostrando {{ suppliers.length }} de {{ totalItems }} proveedores |
+                    Página {{ currentPage + 1 }} de {{ totalPages }}
+                  </span>
+                </div>
               </div>
             </div>
           </div>

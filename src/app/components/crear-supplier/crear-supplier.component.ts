@@ -1,84 +1,135 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Location } from '@angular/common';
-import { CrearSupplierDTO } from '../../interfaces/supplier/crear-supplier-dto';
-import Swal from 'sweetalert2';
-import { AsideComponent } from '../shared/aside/aside.component';
+import { CommonModule, Location, NgClass } from '@angular/common';
 import { AdministradorService } from '../../services/administrador.service';
+import { AsideComponent } from '../shared/aside/aside.component';
+import Swal from 'sweetalert2';
+import { SupplierDTO } from '../../interfaces/supplier/supplier-dto';
 
 @Component({
   selector: 'app-crear-supplier',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, AsideComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    NgClass,
+    AsideComponent
+  ],
+  providers: [AdministradorService],
   templateUrl: './crear-supplier.component.html',
   styleUrl: './crear-supplier.component.css'
 })
-export class CrearSupplierComponent {
-  // Formulario reactivo para crear proveedor
-  crearSupplierForm!: FormGroup;
+export class CrearSupplierComponent implements OnInit {
+  supplierForm!: FormGroup;
+  isEditing = false;
+  formTitle = 'Crear Proveedor';
+  submitButtonText = 'Guardar';
+  showRatingFields = false;
 
   constructor(
-    private formBuilder: FormBuilder,
-    private location: Location,
+    private fb: FormBuilder,
     private adminService: AdministradorService,
-    private router: Router
-  ) {
-    this.crearFormulario(); // Inicializa el formulario al crear el componente
+    private router: Router,
+    private location: Location
+  ) {}
+
+  ngOnInit(): void {
+    this.initForm();
   }
 
-  /**
-   * Inicializa el formulario reactivo con validaciones
-   */
-  private crearFormulario() {
-    this.crearSupplierForm = this.formBuilder.group({
-      name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
-      supplierID: ['', [Validators.required, Validators.minLength(5)]],
-      address: ['', [Validators.required, Validators.minLength(5)]],
-      phone: ['', [Validators.required, Validators.pattern(/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/)]],
+  private initForm(): void {
+    this.supplierForm = this.fb.group({
+      // Información básica del proveedor
+      name: ['', [Validators.required, Validators.minLength(3)]],
+      address: ['', Validators.required],
+      phone: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
       email: ['', [Validators.required, Validators.email]],
-      // Campos automáticos (no visibles en el formulario)
-      status: ['ACTIVO'], // Valor por defecto
-      createdAt: [new Date().toISOString()], // Fecha actual
-      updatedAt: [new Date().toISOString()], // Fecha actual
-      userModify: [1] // ID de usuario (ajustar según autenticación)
+      contactPerson: ['', Validators.required],
+      
+      // Campos adicionales opcionales
+      taxId: [''],
+      website: [''],
+      notes: [''],
+      
+      // Campos para la reseña (inicialmente ocultos)
+      hasReview: [false],
+      lastOrderDate: [''],
+      lastReviewRating: [0],
+      lastReviewComment: [''],
+      onTimeDelivery: [true],
+      qualityIssues: [false]
+    });
+
+    // Escuchar cambios en el checkbox de reseña
+    this.supplierForm.get('hasReview')?.valueChanges.subscribe(hasReview => {
+      this.showRatingFields = hasReview;
+      
+      if (hasReview) {
+        // Si se activa la reseña, establecer validadores para los campos de reseña
+        this.supplierForm.get('lastOrderDate')?.setValidators([Validators.required]);
+        this.supplierForm.get('lastReviewRating')?.setValidators([Validators.required, Validators.min(0), Validators.max(5)]);
+      } else {
+        // Si se desactiva, eliminar validadores
+        this.supplierForm.get('lastOrderDate')?.clearValidators();
+        this.supplierForm.get('lastReviewRating')?.clearValidators();
+      }
+      
+      // Actualizar estado de validación
+      this.supplierForm.get('lastOrderDate')?.updateValueAndValidity();
+      this.supplierForm.get('lastReviewRating')?.updateValueAndValidity();
     });
   }
 
-  /**
-   * Método para crear un nuevo proveedor
-   */
-  public crearSupplier() {
-    // Verifica si el formulario es válido
-    if (this.crearSupplierForm.invalid) {
-      Swal.fire('Formulario incompleto', 'Por favor complete todos los campos requeridos correctamente.', 'error');
+  onSubmit(): void {
+    if (this.supplierForm.invalid) {
+      // Marcar todos los campos como tocados para mostrar errores
+      Object.keys(this.supplierForm.controls).forEach(key => {
+        const control = this.supplierForm.get(key);
+        control?.markAsTouched();
+      });
+      
+      Swal.fire('Error', 'Por favor, complete todos los campos requeridos correctamente', 'error');
       return;
     }
-
-    // Crea el DTO con los valores del formulario
-    const nuevoSupplier: CrearSupplierDTO = this.crearSupplierForm.value;
-
-    // Llama al servicio para crear el proveedor
-    this.adminService.crearSupplier(nuevoSupplier).subscribe({
-      next: () => {
-        Swal.fire('Éxito', 'Proveedor creado correctamente', 'success')
-          .then(() => {
-            this.router.navigate(['/listar-suppliers']); // Redirige al listado
-          });
+    
+    // Preparar datos para enviar
+    const supplierData: SupplierDTO = this.supplierForm.value;
+    
+    // Si no hay reseña, eliminar esos campos
+    if (!supplierData.hasReview) {
+      delete supplierData.lastOrderDate;
+      delete supplierData.lastReviewRating;
+      delete supplierData.lastReviewComment;
+      delete supplierData.onTimeDelivery;
+      delete supplierData.qualityIssues;
+    }
+    
+    // Eliminar campo de control que no debe ir al backend
+    delete supplierData.hasReview;
+    
+    this.adminService.crearSupplier(supplierData).subscribe({
+      next: (response) => {
+        Swal.fire('Éxito', 'Proveedor creado correctamente', 'success');
+        this.router.navigate(['/listar-suppliers']);
       },
       error: (error) => {
         console.error('Error al crear proveedor:', error);
-        const mensaje = error.error?.message || 'Error desconocido al crear el proveedor';
-        Swal.fire('Error', mensaje, 'error');
+        Swal.fire('Error', error.error?.message || 'Error al crear el proveedor', 'error');
       }
     });
   }
 
-  /**
-   * Método para regresar a la página anterior
-   */
-  regresar() {
+  updateRating(rating: number): void {
+    this.supplierForm.patchValue({ lastReviewRating: rating });
+  }
+
+  getRatingClass(star: number): string {
+    const currentRating = this.supplierForm.get('lastReviewRating')?.value || 0;
+    return star <= currentRating ? 'bi-star-fill' : 'bi-star';
+  }
+  
+  regresar(): void {
     this.location.back();
   }
 }
