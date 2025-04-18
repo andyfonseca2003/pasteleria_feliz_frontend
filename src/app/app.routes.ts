@@ -13,6 +13,7 @@ import { CrearInsumosComponent } from './components/crear-insumos/crear-insumos.
 import { EditarInsumosComponent } from './components/editar-insumos/editar-insumos.component';
 import { ListarSuppliersComponent } from './components/listar-suppliers/listar-suppliers.component'; // NUEVA IMPORTACIÓN
 import { CrearSupplierComponent } from './components/crear-supplier/crear-supplier.component';
+import { EditarSupplierComponent } from './components/editar-supplier/editar-supplier.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [LoginGuard] },
@@ -42,6 +43,9 @@ export const routes: Routes = [
     //canActivate: [RolesGuard], data: { expectedRole: ["ADMINISTRADOR"] }
   },
   { path: 'crear-suppliers', component: CrearSupplierComponent,
+    //canActivate: [RolesGuard], data: { expectedRole: ["ADMINISTRADOR"] }
+  },
+  { path: 'editar-suppliers/:id', component: EditarSupplierComponent,
     //canActivate: [RolesGuard], data: { expectedRole: ["ADMINISTRADOR"] }
   },
   { path: "**", pathMatch: "full", redirectTo: "login" },

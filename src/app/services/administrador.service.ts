@@ -1,4 +1,4 @@
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { MensajeDTO } from '../interfaces/mensaje-dto';
@@ -56,5 +56,28 @@ export class AdministradorService {
   
   public eliminarSupplier(id: string): Observable<MensajeDTO> {
     return this.http.delete<MensajeDTO>(`${this.adminURL}/suppliers/${id}`);
+  }
+
+  public listarInsumosPaginados(
+    page: number = 0, 
+    size: number = 10,
+    sortField?: string,
+    sortDirection: 'asc' | 'desc' = 'asc',
+    searchTerm?: string
+  ): Observable<MensajeDTO> {
+    let params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString());
+  
+    if (sortField && sortField.trim() !== '') {
+      params = params.set('sort', sortField);
+      params = params.set('direction', sortDirection);
+    }
+    
+    if (searchTerm && searchTerm.trim() !== '') {
+      params = params.set('search', searchTerm.trim());
+    }
+  
+    return this.http.get<MensajeDTO>(`${this.adminURL}/supplies/paged`, { params });
   }
 }

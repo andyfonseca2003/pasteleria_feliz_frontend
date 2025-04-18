@@ -12,34 +12,89 @@
                 <h6 class="text-white text-capitalize ps-3">Proveedores</h6>
               </div>
             </div>
-            <div class="col-auto ms-3">
-              <a [routerLink]="['/crear-suppliers']" class="btn btn-primary">
-                <i class="bi bi-plus-circle"></i>
-                Crear Proveedor
-              </a>
+            
+            <!-- Barra de búsqueda y filtros -->
+            <div class="search-and-filters row mx-0 mt-3 mb-2 px-3">
+              <div class="col-md-6">
+                <div class="input-group">
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Buscar por nombre, ID, email o contacto..."
+                    [(ngModel)]="searchTerm"
+                    (keyup.enter)="onSearch()"
+                  >
+                  <button class="btn btn-outline-primary" type="button" (click)="onSearch()">
+                    <i class="bi bi-search"></i>
+                  </button>
+                  <button class="btn btn-outline-secondary" type="button" (click)="clearSearch()">
+                    <i class="bi bi-x-lg"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="col-md-6 text-end">
+                <a [routerLink]="['/crear-suppliers']" class="btn btn-primary">
+                  <i class="bi bi-plus-circle"></i>
+                  Crear Proveedor
+                </a>
+              </div>
             </div>
+            
+            <!-- Indicador de carga -->
+            <div *ngIf="isLoading" class="d-flex justify-content-center my-3">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Cargando...</span>
+              </div>
+            </div>
+            
             <div class="card-body px-0 pb-2">
               <div class="table-responsive p-0">
                 <table class="table align-items-center mb-0">
                   <thead>
                     <tr>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-4">
-                        ID</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                        Nombre</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                        Email</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                        Teléfono</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                        Contacto</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-4 sortable-header" 
+                          (click)="sortBy('id')">
+                        ID
+                        <i [ngClass]="getSortIcon('id')" class="ms-1"></i>
+                      </th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2 sortable-header" 
+                          (click)="sortBy('name')">
+                        Nombre
+                        <i [ngClass]="getSortIcon('name')" class="ms-1"></i>
+                      </th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 sortable-header"
+                          (click)="sortBy('email')">
+                        Email
+                        <i [ngClass]="getSortIcon('email')" class="ms-1"></i>
+                      </th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 sortable-header"
+                          (click)="sortBy('phone')">
+                        Teléfono
+                        <i [ngClass]="getSortIcon('phone')" class="ms-1"></i>
+                      </th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 sortable-header"
+                          (click)="sortBy('contactPerson')">
+                        Contacto
+                        <i [ngClass]="getSortIcon('contactPerson')" class="ms-1"></i>
+                      </th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
                         Acciones</th>
                     </tr>
                   </thead>
                   <tbody>
-                    @for (item of suppliers; track $index) {
-                    <tr>
+                    <!-- Mensaje cuando no hay resultados -->
+                    <tr *ngIf="filteredSuppliers.length === 0 && !isLoading">
+                      <td colspan="6" class="text-center py-4">
+                        <i class="bi bi-search fs-3 text-muted mb-2 d-block"></i>
+                        <p class="mb-0">No se encontraron proveedores que coincidan con tu búsqueda</p>
+                        <button class="btn btn-sm btn-outline-primary mt-2" (click)="clearSearch()">
+                          Limpiar búsqueda
+                        </button>
+                      </td>
+                    </tr>
+                    
+                    <!-- Resultados de la tabla -->
+                    <tr *ngFor="let item of filteredSuppliers; let i = index">
                       <td>
                         <div class="d-flex px-2 py-1">
                           <div class="d-flex flex-column justify-content-center">
@@ -90,12 +145,16 @@
                             title="Eliminar proveedor">
                             <i class="bi bi-trash"></i>
                           </button>
+
+                          <button class="btn btn-warning btn-sm" (click)="showInfoModal(item)" title="Ver información">
+                            <i class="bi bi-info-circle"></i>
+                          </button>
                         </div>
                       </td>
                     </tr>
-                    }
                   </tbody>
                 </table>
+                
                 <!-- Paginador -->
                 <div class="pagination-container d-flex justify-content-center mt-4">
                   <nav aria-label="Navegación de proveedores">

@@ -5,7 +5,7 @@ import { CommonModule, Location, NgClass } from '@angular/common';
 import { AdministradorService } from '../../services/administrador.service';
 import { AsideComponent } from '../shared/aside/aside.component';
 import Swal from 'sweetalert2';
-import { SupplierDTO } from '../../interfaces/supplier/supplier-dto';
+import { SupplierService } from '../../services/supplier.service';
 
 @Component({
   selector: 'app-crear-supplier',
@@ -29,7 +29,7 @@ export class CrearSupplierComponent implements OnInit {
 
   constructor(
     private fb: FormBuilder,
-    private adminService: AdministradorService,
+    private supplierService: SupplierService,
     private router: Router,
     private location: Location
   ) {}
@@ -40,42 +40,36 @@ export class CrearSupplierComponent implements OnInit {
 
   private initForm(): void {
     this.supplierForm = this.fb.group({
-      // Información básica del proveedor
       name: ['', [Validators.required, Validators.minLength(3)]],
       address: ['', Validators.required],
       phone: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
       email: ['', [Validators.required, Validators.email]],
       contactPerson: ['', Validators.required],
       
-      // Campos adicionales opcionales
       taxId: [''],
       website: [''],
       notes: [''],
-      
-      // Campos para la reseña (inicialmente ocultos)
+
       hasReview: [false],
       lastOrderDate: [''],
       lastReviewRating: [0],
       lastReviewComment: [''],
       onTimeDelivery: [true],
-      qualityIssues: [false]
+      qualityIssues: [false],
+      status: ['ACTIVO']
     });
 
-    // Escuchar cambios en el checkbox de reseña
     this.supplierForm.get('hasReview')?.valueChanges.subscribe(hasReview => {
       this.showRatingFields = hasReview;
       
       if (hasReview) {
-        // Si se activa la reseña, establecer validadores para los campos de reseña
         this.supplierForm.get('lastOrderDate')?.setValidators([Validators.required]);
         this.supplierForm.get('lastReviewRating')?.setValidators([Validators.required, Validators.min(0), Validators.max(5)]);
       } else {
-        // Si se desactiva, eliminar validadores
         this.supplierForm.get('lastOrderDate')?.clearValidators();
         this.supplierForm.get('lastReviewRating')?.clearValidators();
       }
-      
-      // Actualizar estado de validación
+
       this.supplierForm.get('lastOrderDate')?.updateValueAndValidity();
       this.supplierForm.get('lastReviewRating')?.updateValueAndValidity();
     });
@@ -83,7 +77,6 @@ export class CrearSupplierComponent implements OnInit {
 
   onSubmit(): void {
     if (this.supplierForm.invalid) {
-      // Marcar todos los campos como tocados para mostrar errores
       Object.keys(this.supplierForm.controls).forEach(key => {
         const control = this.supplierForm.get(key);
         control?.markAsTouched();
@@ -93,23 +86,46 @@ export class CrearSupplierComponent implements OnInit {
       return;
     }
     
-    // Preparar datos para enviar
-    const supplierData: SupplierDTO = this.supplierForm.value;
-    
-    // Si no hay reseña, eliminar esos campos
-    if (!supplierData.hasReview) {
-      delete supplierData.lastOrderDate;
-      delete supplierData.lastReviewRating;
-      delete supplierData.lastReviewComment;
-      delete supplierData.onTimeDelivery;
-      delete supplierData.qualityIssues;
+    const formData = this.supplierForm.value;
+
+    if (formData.lastOrderDate) {
+      formData.lastOrderDate = `${formData.lastOrderDate}T00:00:00`;
     }
     
-    // Eliminar campo de control que no debe ir al backend
-    delete supplierData.hasReview;
+    const supplierData: any = {
+      name: formData.name,
+      supplierID: formData.taxId,
+      address: formData.address,
+      phone: formData.phone,
+      email: formData.email,
+      contactPerson: formData.contactPerson,
+      status: "ACTIVO",
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
     
-    this.adminService.crearSupplier(supplierData).subscribe({
+    if (formData.hasReview) {
+      supplierData.lastOrderDate = formData.lastOrderDate !== undefined ? 
+        this.formatDateForBackend(formData.lastOrderDate) : null;
+      
+      supplierData.lastReviewRating = formData.lastReviewRating;
+      supplierData.lastReviewComment = formData.lastReviewComment;
+      supplierData.onTimeDelivery = formData.onTimeDelivery;
+      supplierData.qualityIssues = formData.qualityIssues;
+    }
+
+    const currentUser = this.getUserFromStorage();
+    if (currentUser && currentUser.id) {
+      supplierData.userModify = currentUser.id;
+    }
+    
+    this.supplierService.createSupplier(supplierData).subscribe({
       next: (response) => {
+        if (response.error) {
+          Swal.fire('Error', response.respuesta || 'Error al crear el proveedor', 'error');
+          return;
+        }
+        
         Swal.fire('Éxito', 'Proveedor creado correctamente', 'success');
         this.router.navigate(['/listar-suppliers']);
       },
@@ -118,6 +134,11 @@ export class CrearSupplierComponent implements OnInit {
         Swal.fire('Error', error.error?.message || 'Error al crear el proveedor', 'error');
       }
     });
+  }
+  
+  private getUserFromStorage(): any {
+    const userStr = localStorage.getItem('currentUser');
+    return userStr ? JSON.parse(userStr) : null;
   }
 
   updateRating(rating: number): void {
@@ -131,5 +152,27 @@ export class CrearSupplierComponent implements OnInit {
   
   regresar(): void {
     this.location.back();
+  }
+
+  private formatDateForBackend(dateString: string | Date | null): string | null {
+    if (!dateString) return null;
+    
+    try {
+      const date = typeof dateString === 'string' ? new Date(dateString) : dateString;
+
+      if (isNaN(date.getTime())) {
+        console.error('Fecha inválida:', dateString);
+        return null;
+      }
+
+      const year = date.getUTCFullYear();
+      const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+      const day = String(date.getUTCDate()).padStart(2, '0');
+      
+      return `${year}-${month}-${day}T00:00:00.000Z`;
+    } catch (error) {
+      console.error('Error al formatear fecha:', error);
+      return null;
+    }
   }
 }
