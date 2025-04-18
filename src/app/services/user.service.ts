@@ -9,7 +9,7 @@ import { UpdateUserCommandDto } from '../interfaces/user/update-user-command-dto
   providedIn: 'root'
 })
 export class UserService {
-  private userURL = "http://localhost:8080/api/users";
+  private userURL = "https://ing-soft-iii-pasteleria.onrender.com/api/users";
 
   constructor(private http: HttpClient) { }
 
