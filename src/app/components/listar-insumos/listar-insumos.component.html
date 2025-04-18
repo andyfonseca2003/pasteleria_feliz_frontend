@@ -12,38 +12,94 @@
                 <h6 class="text-white text-capitalize ps-3">Insumos</h6>
               </div>
             </div>
-            <div class="col-auto ms-3">
-              <a href="/crear-insumos" class="btn btn-primary">
-                <i class="bi bi-plus-circle"></i>
-                Crear Insumo
-              </a>
+            
+            <!-- Barra de búsqueda y filtros -->
+            <div class="search-and-filters row mx-0 mt-3 mb-2 px-3">
+              <div class="col-md-6">
+                <div class="input-group">
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Buscar por nombre, ID o proveedor..."
+                    [(ngModel)]="searchTerm"
+                    (keyup.enter)="onSearch()"
+                  >
+                  <button class="btn btn-outline-primary" type="button" (click)="onSearch()">
+                    <i class="bi bi-search"></i>
+                  </button>
+                  <button class="btn btn-outline-secondary" type="button" (click)="clearSearch()">
+                    <i class="bi bi-x-lg"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="col-md-6 text-end">
+                <a [routerLink]="['/crear-insumos']" class="btn btn-primary">
+                  <i class="bi bi-plus-circle"></i>
+                  Crear Insumo
+                </a>
+              </div>
             </div>
+            
+            <!-- Indicador de carga -->
+            <div *ngIf="isLoading" class="d-flex justify-content-center my-3">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Cargando...</span>
+              </div>
+            </div>
+            
             <div class="card-body px-0 pb-2">
               <div class="table-responsive p-0">
                 <table class="table align-items-center mb-0">
                   <thead>
                     <tr>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-4">
-                        id</th>
-                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2">
-                        nombre</th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-4 sortable-header" 
+                          (click)="sortBy('id')">
+                        ID
+                        <i [ngClass]="getSortIcon('id')" class="ms-1"></i>
+                      </th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2 sortable-header" 
+                          (click)="sortBy('name')">
+                        Nombre
+                        <i [ngClass]="getSortIcon('name')" class="ms-1"></i>
+                      </th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 sortable-header"
+                          (click)="sortBy('price')">
+                        Precio
+                        <i [ngClass]="getSortIcon('price')" class="ms-1"></i>
+                      </th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 sortable-header"
+                          (click)="sortBy('entryDate')">
+                        Fecha de entrada
+                        <i [ngClass]="getSortIcon('entryDate')" class="ms-1"></i>
+                      </th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 sortable-header"
+                          (click)="sortBy('expirationDate')">
+                        Fecha de vencimiento
+                        <i [ngClass]="getSortIcon('expirationDate')" class="ms-1"></i>
+                      </th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 sortable-header"
+                          (click)="sortBy('quantity')">
+                        Cantidad
+                        <i [ngClass]="getSortIcon('quantity')" class="ms-1"></i>
+                      </th>
                       <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                        precio</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                        fecha de entrada</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                        fecha de expiración</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                        cantidad</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                        fecha de creación</th>
-                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
-                        fecha de actualización</th>
-                      <th class="text-secondary opacity-7"></th>
+                        Acciones</th>
                     </tr>
                   </thead>
                   <tbody>
-                    @for (item of insumos; track $index) {
+                    <!-- Mensaje cuando no hay resultados -->
+                    <tr *ngIf="filteredInsumos.length === 0 && !isLoading">
+                      <td colspan="7" class="text-center py-4">
+                        <i class="bi bi-search fs-3 text-muted mb-2 d-block"></i>
+                        <p class="mb-0">No se encontraron insumos que coincidan con tu búsqueda</p>
+                        <button class="btn btn-sm btn-outline-primary mt-2" (click)="clearSearch()">
+                          Limpiar búsqueda
+                        </button>
+                      </td>
+                    </tr>
+                    
+                    <!-- Resultados de la tabla -->
+                    @for (item of filteredInsumos; track $index) {
                     <tr>
                       <td>
                         <div class="d-flex px-2 py-1">
@@ -60,63 +116,93 @@
                         </div>
                       </td>
                       <td>
-                        <div class="d-flex px-2 py-1">
+                        <div class="d-flex px-2 py-1 justify-content-center">
                           <div class="d-flex flex-column justify-content-center">
                             <h6 class="mb-0 text-sm">{{item.price}}</h6>
                           </div>
                         </div>
                       </td>
                       <td>
-                        <div class="d-flex px-2 py-1">
+                        <div class="d-flex px-2 py-1 justify-content-center">
                           <div class="d-flex flex-column justify-content-center">
                             <h6 class="mb-0 text-sm">{{item.entryDate}}</h6>
                           </div>
                         </div>
                       </td>
                       <td>
-                        <div class="d-flex px-2 py-1">
+                        <div class="d-flex px-2 py-1 justify-content-center">
                           <div class="d-flex flex-column justify-content-center">
                             <h6 class="mb-0 text-sm">{{item.expirationDate}}</h6>
                           </div>
                         </div>
                       </td>
                       <td>
-                        <div class="d-flex px-2 py-1">
+                        <div class="d-flex px-2 py-1 justify-content-center">
                           <div class="d-flex flex-column justify-content-center">
                             <h6 class="mb-0 text-sm">{{item.quantity}}</h6>
                           </div>
                         </div>
                       </td>
-                      <td>
-                        <div class="d-flex px-2 py-1">
-                          <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">{{item.createdAt}}</h6>
-                          </div>
+                      <td class="align-middle text-center">
+                        <div class="btn-group btn-group-sm" role="group">
+                          <button class="btn btn-info btn-sm" (click)="showInfoModal(item)" title="Ver información">
+                            <i class="bi bi-info-circle"></i>
+                          </button>
+
+                          <button class="btn btn-secondary btn-sm" (click)="openEditarInsumo(item.id)"
+                            title="Editar insumo">
+                            <i class="bi bi-pencil"></i>
+                          </button>
+
+                          <button (click)="eliminarInsumo(item.id)" class="btn btn-danger btn-sm"
+                            title="Eliminar insumo">
+                            <i class="bi bi-trash"></i>
+                          </button>
+
+                          <button class="btn btn-warning btn-sm" (click)="showRotacionModal(item)"
+                            title="Ver rotación de stock">
+                            <i class="bi bi-arrow-repeat"></i>
+                          </button>
                         </div>
-                      </td>
-                      <td>
-                        <div class="d-flex px-2 py-1">
-                          <div class="d-flex flex-column justify-content-center">
-                            <h6 class="mb-0 text-sm">{{item.updatedAt}}</h6>
-                          </div>
-                        </div>
-                      </td>
-                      <td class="align-middle">
-                        <a href="/editar-insumos/{{item.id}}" class="btn btn-secondary" data-toggle="tooltip"
-                          data-original-title="Editar insumo">
-                          Editar
-                        </a>
-                      </td>
-                      <td class="align-middle">
-                        <button (click)="eliminarInsumo(item.id)" class="btn btn-danger" data-toggle="tooltip"
-                          data-original-title="Edit user">
-                          Eliminar
-                        </button>
                       </td>
                     </tr>
                     }
                   </tbody>
                 </table>
+                <!-- Paginador -->
+                <div class="pagination-container d-flex justify-content-center mt-4">
+                  <nav aria-label="Navegación de insumos">
+                    <ul class="pagination">
+                      <li class="page-item" [class.disabled]="currentPage === 0">
+                        <button class="page-link" (click)="goToPreviousPage()" aria-label="Anterior">
+                          <i class="bi bi-chevron-left"></i>
+                        </button>
+                      </li>
+
+                      <!-- Mostrar hasta 5 páginas (la actual y 2 antes/después) -->
+                      @for (pageIdx of getPaginationRange(); track pageIdx) {
+                      <li class="page-item" [class.active]="pageIdx === currentPage">
+                        <button class="page-link" (click)="goToPage(pageIdx)">{{ pageIdx + 1 }}</button>
+                      </li>
+                      }
+
+                      <li class="page-item" [class.disabled]="currentPage === totalPages - 1">
+                        <button class="page-link" (click)="goToNextPage()" aria-label="Siguiente">
+                          <i class="bi bi-chevron-right"></i>
+                        </button>
+                      </li>
+                    </ul>
+                  </nav>
+                </div>
+
+                <!-- Información de paginación -->
+                <div class="text-center mt-3">
+                  <span class="pagination-info">
+                    <i class="bi bi-file-earmark-text me-1"></i>
+                    Mostrando {{ insumos.length }} de {{ totalItems }} insumos |
+                    Página {{ currentPage + 1 }} de {{ totalPages }}
+                  </span>
+                </div>
               </div>
             </div>
           </div>

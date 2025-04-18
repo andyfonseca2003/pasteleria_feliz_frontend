@@ -7,5 +7,5 @@ export interface InsumoDTO {
     quantity: string,
     createdAt: string,
     updatedAt: string,
-    
+    userModiffy: number
 }
