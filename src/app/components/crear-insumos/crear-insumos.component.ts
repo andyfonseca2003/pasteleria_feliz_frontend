@@ -7,12 +7,12 @@ import { CrearInsumoDTO } from '../../interfaces/Insumo/crear-insumo-dto';
 import Swal from 'sweetalert2';
 import { AsideComponent } from '../shared/aside/aside.component';
 import { AdministradorService } from '../../services/administrador.service';
-import { Select2, Select2Data, Select2Hint, Select2Label } from 'ng-select2-component';
+import { Select2Data } from 'ng-select2-component';
 
 @Component({
   selector: 'app-crear-insumos',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, AsideComponent, Select2, Select2Hint, Select2Label],
+  imports: [ReactiveFormsModule, CommonModule, AsideComponent],
   templateUrl: './crear-insumos.component.html',
   styleUrl: './crear-insumos.component.css'
 })
@@ -50,7 +50,13 @@ export class CrearInsumosComponent {
   public crearInsumo() {
     // Verifica si el formulario es inválido
     if (this.crearInsumoForm.invalid) {
-      Swal.fire('Formulario incompleto', 'Por favor, rellene todos los campos correctamente.', 'error');
+      Swal.fire({
+        title: 'Formulario incompleto', 
+        text: 'Por favor, rellene todos los campos correctamente.',
+        icon: 'error',
+        confirmButtonText: 'Aceptar',
+        confirmButtonColor: '#8b0000',
+      });
       return;  // Si el formulario es inválido, no hace nada
     }
 
@@ -59,32 +65,73 @@ export class CrearInsumosComponent {
 
     // Llama al servicio para crear el insumo
     this.adminService.crearInsumo(nuevoInsumo).subscribe({
-      next: () => {
-        Swal.fire("Éxito!", "Se ha creado un nuevo insumo.", "success").then(() => {
+      next: (data) => {
+        if (data.error) {
+          Swal.fire({
+            title: 'Error',
+            text: data.respuesta || 'Error al crear el insumo',
+            icon: 'error',
+            confirmButtonText: 'Aceptar',
+            confirmButtonColor: '#8b0000',
+          });
+          return;
+        }
+        
+        Swal.fire({
+          title: "Éxito!",
+          text: "Se ha creado un nuevo insumo.",
+          icon: "success",
+          confirmButtonText: 'Aceptar',
+          confirmButtonColor: '#065f46',
+        }).then(() => {
           this.router.navigate(["/listar-insumos"]);
         });
       },
       error: (error) => {
-        Swal.fire(error.respuesta)
-        console.log(error);
+        console.error('Error al crear insumo:', error);
+        Swal.fire({
+          title: 'Error',
+          text: error.error?.data || 'Error al crear el insumo',
+          icon: 'error',
+          confirmButtonText: 'Aceptar',
+          confirmButtonColor: '#8b0000',
+        });
       },
     });
   }
 
-  // Método para mostrar los insumos
+  // Método para mostrar los proveedores
   public showProveedores() {
-    this.adminService.listarProveedores().subscribe({
+    this.adminService.listarSuppliers().subscribe({
       next: (data) => {
-        console.log('Proveedores:', data);  // Verifica qué datos estás recibiendo
-        this.proveedores = data;
+        if (data.error) {
+          Swal.fire({
+            title: 'Error',
+            text: data.respuesta || 'No se pudieron cargar los proveedores',
+            icon: 'error',
+            confirmButtonText: 'Aceptar',
+            confirmButtonColor: '#8b0000',
+          });
+          return;
+        }
+        
+        console.log('Proveedores:', data.respuesta);  // Verifica qué datos estás recibiendo
+        this.proveedores = data.respuesta;
+        
         this.data = this.proveedores.map(prov => ({
           value: prov.supplierID.toString(), // El value debe ser string
           label: prov.name // Nombre del proveedor
         }));
       },
       error: (error) => {
-        Swal.fire(error.respuesta);
-        console.log(error.error);
+        console.error('Error al cargar proveedores:', error);
+        Swal.fire({
+          title: 'Error',
+          text: error.error?.data || 'No se pudieron cargar los proveedores',
+          icon: 'error',
+          confirmButtonText: 'Aceptar',
+          confirmButtonColor: '#8b0000',
+        });
       }
     });
   }
@@ -92,6 +139,5 @@ export class CrearInsumosComponent {
   // Método para regresar a la página anterior
   regresar() {
     this.router.navigate(["/listar-insumos"]);
-
   }
 }

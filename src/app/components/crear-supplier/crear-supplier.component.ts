@@ -1,84 +1,178 @@
-import { CommonModule } from '@angular/common';
-import { Component } from '@angular/core';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { Component, OnInit } from '@angular/core';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
-import { Location } from '@angular/common';
-import { CrearSupplierDTO } from '../../interfaces/supplier/crear-supplier-dto';
-import Swal from 'sweetalert2';
-import { AsideComponent } from '../shared/aside/aside.component';
+import { CommonModule, Location, NgClass } from '@angular/common';
 import { AdministradorService } from '../../services/administrador.service';
+import { AsideComponent } from '../shared/aside/aside.component';
+import Swal from 'sweetalert2';
+import { SupplierService } from '../../services/supplier.service';
 
 @Component({
   selector: 'app-crear-supplier',
   standalone: true,
-  imports: [ReactiveFormsModule, CommonModule, AsideComponent],
+  imports: [
+    CommonModule,
+    ReactiveFormsModule,
+    NgClass,
+    AsideComponent
+  ],
+  providers: [AdministradorService],
   templateUrl: './crear-supplier.component.html',
   styleUrl: './crear-supplier.component.css'
 })
-export class CrearSupplierComponent {
-  // Formulario reactivo para crear proveedor
-  crearSupplierForm!: FormGroup;
+export class CrearSupplierComponent implements OnInit {
+  supplierForm!: FormGroup;
+  isEditing = false;
+  formTitle = 'Crear Proveedor';
+  submitButtonText = 'Guardar';
+  showRatingFields = false;
 
   constructor(
-    private formBuilder: FormBuilder,
-    private location: Location,
-    private adminService: AdministradorService,
-    private router: Router
-  ) {
-    this.crearFormulario(); // Inicializa el formulario al crear el componente
+    private fb: FormBuilder,
+    private supplierService: SupplierService,
+    private router: Router,
+    private location: Location
+  ) {}
+
+  ngOnInit(): void {
+    this.initForm();
   }
 
-  /**
-   * Inicializa el formulario reactivo con validaciones
-   */
-  private crearFormulario() {
-    this.crearSupplierForm = this.formBuilder.group({
-      name: ['', [Validators.required, Validators.minLength(3), Validators.maxLength(100)]],
-      supplierID: ['', [Validators.required, Validators.minLength(5)]],
-      address: ['', [Validators.required, Validators.minLength(5)]],
-      phone: ['', [Validators.required, Validators.pattern(/^[+]*[(]{0,1}[0-9]{1,4}[)]{0,1}[-\s\./0-9]*$/)]],
+  private initForm(): void {
+    this.supplierForm = this.fb.group({
+      name: ['', [Validators.required, Validators.minLength(3)]],
+      address: ['', Validators.required],
+      phone: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
       email: ['', [Validators.required, Validators.email]],
-      // Campos automáticos (no visibles en el formulario)
-      status: ['ACTIVO'], // Valor por defecto
-      createdAt: [new Date().toISOString()], // Fecha actual
-      updatedAt: [new Date().toISOString()], // Fecha actual
-      userModify: [1] // ID de usuario (ajustar según autenticación)
+      contactPerson: ['', Validators.required],
+      
+      taxId: [''],
+      website: [''],
+      notes: [''],
+
+      hasReview: [false],
+      lastOrderDate: [''],
+      lastReviewRating: [0],
+      lastReviewComment: [''],
+      onTimeDelivery: [true],
+      qualityIssues: [false],
+      status: ['ACTIVO']
+    });
+
+    this.supplierForm.get('hasReview')?.valueChanges.subscribe(hasReview => {
+      this.showRatingFields = hasReview;
+      
+      if (hasReview) {
+        this.supplierForm.get('lastOrderDate')?.setValidators([Validators.required]);
+        this.supplierForm.get('lastReviewRating')?.setValidators([Validators.required, Validators.min(0), Validators.max(5)]);
+      } else {
+        this.supplierForm.get('lastOrderDate')?.clearValidators();
+        this.supplierForm.get('lastReviewRating')?.clearValidators();
+      }
+
+      this.supplierForm.get('lastOrderDate')?.updateValueAndValidity();
+      this.supplierForm.get('lastReviewRating')?.updateValueAndValidity();
     });
   }
 
-  /**
-   * Método para crear un nuevo proveedor
-   */
-  public crearSupplier() {
-    // Verifica si el formulario es válido
-    if (this.crearSupplierForm.invalid) {
-      Swal.fire('Formulario incompleto', 'Por favor complete todos los campos requeridos correctamente.', 'error');
+  onSubmit(): void {
+    if (this.supplierForm.invalid) {
+      Object.keys(this.supplierForm.controls).forEach(key => {
+        const control = this.supplierForm.get(key);
+        control?.markAsTouched();
+      });
+      
+      Swal.fire('Error', 'Por favor, complete todos los campos requeridos correctamente', 'error');
       return;
     }
+    
+    const formData = this.supplierForm.value;
 
-    // Crea el DTO con los valores del formulario
-    const nuevoSupplier: CrearSupplierDTO = this.crearSupplierForm.value;
+    if (formData.lastOrderDate) {
+      formData.lastOrderDate = `${formData.lastOrderDate}T00:00:00`;
+    }
+    
+    const supplierData: any = {
+      name: formData.name,
+      supplierID: formData.taxId,
+      address: formData.address,
+      phone: formData.phone,
+      email: formData.email,
+      contactPerson: formData.contactPerson,
+      status: "ACTIVO",
+      createdAt: new Date().toISOString(),
+      updatedAt: new Date().toISOString()
+    };
+    
+    if (formData.hasReview) {
+      supplierData.lastOrderDate = formData.lastOrderDate !== undefined ? 
+        this.formatDateForBackend(formData.lastOrderDate) : null;
+      
+      supplierData.lastReviewRating = formData.lastReviewRating;
+      supplierData.lastReviewComment = formData.lastReviewComment;
+      supplierData.onTimeDelivery = formData.onTimeDelivery;
+      supplierData.qualityIssues = formData.qualityIssues;
+    }
 
-    // Llama al servicio para crear el proveedor
-    this.adminService.crearSupplier(nuevoSupplier).subscribe({
-      next: () => {
-        Swal.fire('Éxito', 'Proveedor creado correctamente', 'success')
-          .then(() => {
-            this.router.navigate(['/listar-suppliers']); // Redirige al listado
-          });
+    const currentUser = this.getUserFromStorage();
+    if (currentUser && currentUser.id) {
+      supplierData.userModify = currentUser.id;
+    }
+    
+    this.supplierService.createSupplier(supplierData).subscribe({
+      next: (response) => {
+        if (response.error) {
+          Swal.fire('Error', response.respuesta || 'Error al crear el proveedor', 'error');
+          return;
+        }
+        
+        Swal.fire('Éxito', 'Proveedor creado correctamente', 'success');
+        this.router.navigate(['/listar-suppliers']);
       },
       error: (error) => {
         console.error('Error al crear proveedor:', error);
-        const mensaje = error.error?.message || 'Error desconocido al crear el proveedor';
-        Swal.fire('Error', mensaje, 'error');
+        Swal.fire('Error', error.error?.message || 'Error al crear el proveedor', 'error');
       }
     });
   }
+  
+  private getUserFromStorage(): any {
+    const userStr = localStorage.getItem('currentUser');
+    return userStr ? JSON.parse(userStr) : null;
+  }
 
-  /**
-   * Método para regresar a la página anterior
-   */
-  regresar() {
+  updateRating(rating: number): void {
+    this.supplierForm.patchValue({ lastReviewRating: rating });
+  }
+
+  getRatingClass(star: number): string {
+    const currentRating = this.supplierForm.get('lastReviewRating')?.value || 0;
+    return star <= currentRating ? 'bi-star-fill' : 'bi-star';
+  }
+  
+  regresar(): void {
     this.location.back();
+  }
+
+  private formatDateForBackend(dateString: string | Date | null): string | null {
+    if (!dateString) return null;
+    
+    try {
+      const date = typeof dateString === 'string' ? new Date(dateString) : dateString;
+
+      if (isNaN(date.getTime())) {
+        console.error('Fecha inválida:', dateString);
+        return null;
+      }
+
+      const year = date.getUTCFullYear();
+      const month = String(date.getUTCMonth() + 1).padStart(2, '0');
+      const day = String(date.getUTCDate()).padStart(2, '0');
+      
+      return `${year}-${month}-${day}T00:00:00.000Z`;
+    } catch (error) {
+      console.error('Error al formatear fecha:', error);
+      return null;
+    }
   }
 }

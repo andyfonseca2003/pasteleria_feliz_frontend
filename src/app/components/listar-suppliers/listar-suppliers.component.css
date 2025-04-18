@@ -19,3 +19,54 @@
 .table th {
   white-space: nowrap;
 }
+
+.pagination-container {
+  margin: 30px 0;
+}
+
+.pagination {
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.pagination .page-item .page-link {
+  padding: 12px 18px;
+  font-size: 1rem;
+  color: #495057;
+  border: none;
+  margin: 0;
+  transition: all 0.3s ease;
+}
+
+.pagination .page-item.active .page-link {
+  background-color: #343a40;
+  color: white;
+  font-weight: bold;
+  transform: scale(1.05);
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.pagination .page-item:not(.active):hover .page-link {
+  background-color: #f8f9fa;
+  color: #343a40;
+  transform: scale(1.05);
+}
+
+.pagination .page-item.disabled .page-link {
+  color: #adb5bd;
+  background-color: #f8f9fa;
+  cursor: not-allowed;
+}
+
+/* Información de paginación */
+.pagination-info {
+  font-size: 0.9rem;
+  color: #6c757d;
+  padding: 8px 16px;
+  background-color: #f8f9fa;
+  border-radius: 8px;
+  display: inline-block;
+  margin-top: 10px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+}

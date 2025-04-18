@@ -1,26 +1,176 @@
+/* Estilos base mejorados */
+.card {
+  box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(0, 0, 0, 0.1);
+  border: none;
+  background-color: #fff;
+  border-radius: 0.75rem;
+}
+
+.card-body {
+  padding-top: 10px;
+  background-color: #fcfcfc;
+  border-radius: 0 0 0.75rem 0.75rem;
+}
+
 .top-header {
-  top: -15px;
+  margin-bottom: 20px;
 }
 
-/* Estilos para mensajes de error en los campos */
-.invalid-feedback {
-  color: #dc3545;
-  font-size: 0.875em;
-}
-
-/* Mejora la apariencia de los inputs */
-.form-control {
+/* Estilos para inputs y contenedores de formulario */
+.input-group-outline {
+  border: 1px solid #d2d6da;
   border-radius: 0.375rem;
-  padding: 0.5rem 0.75rem;
+  padding: 0.375rem 0.75rem;
+  margin-bottom: 1rem;
+  background-color: #fff;
+  transition: all 0.2s ease-in-out;
+  box-shadow: 0 0 5px rgba(0, 0, 0, 0.05);
 }
 
-/* Estilo para botones */
-.btn-success {
-  background-color: #28a745;
-  border-color: #28a745;
-}
-
-.btn-secondary {
-  background-color: #6c757d;
+.input-group-outline:focus-within {
   border-color: #6c757d;
+  box-shadow: 0 0 0 0.2rem rgba(108, 117, 125, 0.15);
+}
+
+.input-group-outline input,
+.input-group-outline textarea {
+  border: none;
+  outline: none;
+  width: 100%;
+  background-color: transparent;
+}
+
+/* Estilos para etiquetas y textos */
+.form-label {
+  margin-bottom: 0.5rem;
+  display: block;
+  font-size: 0.875rem;
+  font-weight: 500;
+  color: #344767;
+}
+
+.text-danger {
+  font-size: 0.75rem;
+  margin-top: -0.5rem;
+  margin-bottom: 0.5rem;
+  font-weight: 500;
+}
+
+/* Estilos para controles de formulario */
+.form-control {
+  height: calc(2.5rem);
+}
+
+textarea.form-control {
+  height: auto;
+  resize: vertical;
+  min-height: 80px;
+}
+
+.form-check-input {
+  cursor: pointer;
+}
+
+/* Sección de calificación y reseña */
+.card .border {
+  border: 1px solid #e9ecef !important;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.05);
+  border-radius: 0.5rem;
+}
+
+.card .card-header {
+  border-radius: 0.5rem 0.5rem 0 0;
+  padding: 0.75rem 1rem;
+  background-color: #f8f9fa;
+  border-bottom: 1px solid #eaecef;
+}
+
+.form-switch {
+  padding-left: 2.5rem;
+}
+
+/* Estilos para la sección de rating */
+.rating {
+  display: flex;
+  align-items: center;
+}
+
+.rating i {
+  font-size: 1.5rem;
+  cursor: pointer;
+  color: #ffc107;
+  transition: transform 0.2s;
+}
+
+.rating i:hover {
+  transform: scale(1.2);
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}
+
+/* Botones */
+.btn {
+  padding: 0.625rem 1.5rem;
+  font-weight: 500;
+  border-radius: 0.375rem;
+  transition: all 0.15s ease-in-out;
+  text-transform: none;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+}
+
+.btn-primary {
+  background-color: #344767;
+  border-color: #344767;
+}
+
+.btn-primary:hover {
+  background-color: #293a54;
+  border-color: #293a54;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+.btn-outline-secondary {
+  color: #6c757d;
+  border-color: #6c757d;
+}
+
+.btn-outline-secondary:hover {
+  background-color: #6c757d;
+  color: #fff;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* Mejoras para responsive */
+@media (max-width: 767.98px) {
+  .card-body {
+    padding: 0.75rem;
+  }
+  
+  .row > div {
+    margin-bottom: 1rem;
+  }
+  
+  .btn {
+    padding: 0.5rem 1rem;
+  }
+}
+
+/* Efecto sutil en campos requeridos */
+.input-group-outline:has(input:required)::after,
+.input-group-outline:has(textarea:required)::after {
+  content: '';
+  position: absolute;
+  top: 0;
+  right: 0;
+  width: 4px;
+  height: 100%;
+  background-color: rgba(52, 71, 103, 0.1);
+  border-radius: 0 0.375rem 0.375rem 0;
+}
+
+/* Añade un sutil borde a la tarjeta de reseña */
+.card.mt-4.p-3.border {
+  background-color: #fdfdfd;
 }
