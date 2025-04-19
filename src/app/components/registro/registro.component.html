@@ -1,38 +1,70 @@
-<div class="card col-9 mx-auto">
-    <div class="card-header">
-        Registro
-    </div>
-    <div class="card-body">
-        <h5 class="card-title text-center mb-3">Crear una cuenta</h5>
-        <p class="card-subtitle text-center fs-6">Es rápido y sencillo</p>
-        <hr class="col-11 mx-auto mt-1">
-        <form [formGroup]="registroForm" (ngSubmit)="registrar()" novalidate="" class="row m-0 p-0">
-            <div class="mb-3 col-6 mx-auto">
-                <label class="form-label">Cédula: </label>
-                <input type="text" class="form-control" formControlName="cedula" />
+<div class="container-fluid row mx-auto">
+    <app-aside class="p-0 m-0 col-2"></app-aside>
+    <div class="col-10 main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+        <!-- End Navbar -->
+        <div class="container-fluid py-2">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card my-4">
+                        <div
+                            class="top-header card-header p-0 position-relative mt-n4 mx-3 z-index-2 border-radius rounded bg-dark">
+                            <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
+                                <h6 class="text-white text-capitalize ps-3">Insumos</h6>
+                            </div>
+                        </div>
+                        <div class="card-body px-4 pb-2">
+                            <form [formGroup]="registroForm" (ngSubmit)="registrar()">
+                                <div class="row mb-3">
+                                    <div class="mb-3 col-6 mx-auto">
+                                        <label class="form-label">Tipo de documento: </label>
+                                        <input type="text" class="form-control" formControlName="typeDocument" />
+                                    </div>
+                                    <div class="mb-3 col-6 mx-auto">
+                                        <label class="form-label">Cédula: </label>
+                                        <input type="text" class="form-control" formControlName="documentNumber" />
+                                    </div>
+                                    <div class="mb-3 col-6 mx-auto">
+                                        <label class="form-label">Primer nombre: </label>
+                                        <input type="text" class="form-control" formControlName="firstName" />
+                                    </div>
+                                    <div class="mb-3 col-6 mx-auto">
+                                        <label class="form-label">Segundo nombre: </label>
+                                        <input type="text" class="form-control" formControlName="secondName" />
+                                    </div>
+                                    <div class="mb-3 col-6 mx-auto">
+                                        <label class="form-label">Primer apellido: </label>
+                                        <input type="text" class="form-control" formControlName="lastName" />
+                                    </div>
+                                    <div class="mb-3 col-6 mx-auto">
+                                        <label class="form-label">Segundo Apellido: </label>
+                                        <input type="text" class="form-control" formControlName="secondLastName" />
+                                    </div>
+                                    <div class="mb-3 col-6 mx-auto">
+                                        <label class="form-label">Email: </label>
+                                        <input type="email" class="form-control" formControlName="email" />
+                                    </div>
+                                    <div class="mb-3 col-6 mx-auto">
+                                        <label class="form-label">Teléfono: </label>
+                                        <input type="number" class="form-control" formControlName="phone" />
+                                    </div>
+                                    <div class="row g-0 col-11 text-end justify-content-end">
+                                        <!-- Botón Cancelar -->
+                                        <div class="mb-3 mx-1 col-auto">
+                                            <button type="submit" class="btn btn-secondary col-auto"
+                                                routerLink="/login">Cancelar</button>
+                                            <!-- Botón Registrarse -->
+                                        </div>
+                                        <div class="mb-3 mx-1 col-auto">
+                                            <button type="submit" class="btn btn-success col-auto"
+                                                [disabled]="registroForm.invalid">Crear usuario</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
             </div>
-            <div class="mb-3 col-6 mx-auto">
-                <label class="form-label">Nombre: </label>
-                <input type="text" class="form-control" formControlName="nombre" />
-            </div>
-            <div class="mb-3 col-6 mx-auto">
-                <label class="form-label">Email: </label>
-                <input type="email" class="form-control" formControlName="email" />
-            </div>
-            <div class="mb-3 col-6 mx-auto">
-                <label class="form-label">Teléfono: </label>
-                <input type="number" class="form-control" formControlName="telefono" />
-            </div>
-            <div class="mb-3 col-12 mx-auto">
-                <label class="form-label">Dirección: </label>
-                <input type="text" class="form-control" formControlName="direccion" />
-            </div>
-            <div class="mb-3 text-center d-flex justify-content-center gap-3">
-                <!-- Botón Cancelar -->
-                <button type="submit" class="btn btn-secondary col-3" routerLink="/login">Cancelar</button>
-                <!-- Botón Registrarse -->
-                <button type="submit" class="btn btn-primary col-3" [disabled]="registroForm.invalid">Registrarse</button>
-            </div>
-        </form>
+        </div>
     </div>
 </div>

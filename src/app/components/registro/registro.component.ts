@@ -4,36 +4,43 @@ import { AuthService } from '../../services/auth/auth.service';
 import { CrearCuentaDTO } from '../../interfaces/Cuenta/crear-cuenta-dto';
 import Swal from 'sweetalert2';
 import { Router, RouterLink } from '@angular/router';
+import { AsideComponent } from '../shared/aside/aside.component';
+import { UserService } from '../../services/user.service';
+import { CreateUserCommandDto } from '../../interfaces/user/create-user-command-dto';
 
 @Component({
   selector: 'app-registro',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterLink],
+  imports: [ReactiveFormsModule, RouterLink, AsideComponent],
   templateUrl: './registro.component.html',
   styleUrl: './registro.component.css'
 })
 export class RegistroComponent {
   registroForm!: FormGroup;
+  formTitle = 'Crear Usuario';
 
-  constructor(private formBuilder: FormBuilder, private authService: AuthService, private router: Router) {
+  constructor(private formBuilder: FormBuilder, private userService: UserService, private router: Router) {
     this.crearFormulario();
   }
 
   private crearFormulario() {
     this.registroForm = this.formBuilder.group({
-      cedula: ['', [Validators.required]],
-      nombre: ['', [Validators.required]],
+      typeDocument: ['', [Validators.required]],
+      documentNumber: ['', [Validators.required]],
+      firstName: ['', [Validators.required]],
+      secondName: [''],
+      lastName: ['', [Validators.required]],
+      secondLastName: [''],
       email: ['', [Validators.required, Validators.email]],
-      direccion: ['', [Validators.required]],
-      telefono: ['', [Validators.required, Validators.maxLength(10)]]
+      phone: ['', [Validators.required, Validators.maxLength(10)]]
     }
     );
   }
 
   public registrar() {
-    const crearCuenta = this.registroForm.value as CrearCuentaDTO;
+    const crearCuenta = this.registroForm.value as CreateUserCommandDto;
 
-    this.authService.crearCuenta(crearCuenta).subscribe({
+    this.userService.createUser(crearCuenta).subscribe({
       next: (data) => {
         Swal.fire({
           title: 'Cuenta creada',

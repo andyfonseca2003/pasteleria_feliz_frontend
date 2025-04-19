@@ -16,8 +16,10 @@ export class RolesService {
     const expectedRole: string[] = next.data["expectedRole"];
     this.realRole = this.tokenService.getRol();
 
-    if (!this.tokenService.isLogged() || !expectedRole.some(r => this.realRole.includes(r))) {
-      this.router.navigate([""]);
+    if (!this.tokenService.isLogged() 
+      // || !expectedRole.some(r => this.realRole.includes(r))
+    ) {
+      this.router.navigate(["/login"]);
       return false;
     }
 

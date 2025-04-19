@@ -1,3 +1,5 @@
+
+
 /* Estilos base mejorados */
 .card {
   box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.14), 0 7px 10px -5px rgba(0, 0, 0, 0.1);
@@ -13,7 +15,7 @@
 }
 
 .top-header {
-  margin-bottom: 20px;
+  top: -15px;
 }
 
 /* Estilos para inputs y contenedores de formulario */

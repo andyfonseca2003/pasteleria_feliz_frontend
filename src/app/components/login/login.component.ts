@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
-import { RouterModule } from '@angular/router';
+import { ActivatedRoute, RouterModule } from '@angular/router';
 import { AuthService } from '../../services/auth/auth.service';
 import Swal from 'sweetalert2';
 import { LoginDTO } from '../../interfaces/Cuenta/login-dto';
@@ -17,7 +17,8 @@ export class LoginComponent {
 
   crearLogin!: FormGroup;
 
-  constructor(private formBuilder: FormBuilder, private authService: AuthService, private tokenService: TokenService) {
+  constructor(private formBuilder: FormBuilder, private authService: AuthService, private tokenService: TokenService, private route: ActivatedRoute) {
+    this.mostrarError();
     this.crearFormulario();
   }
 
@@ -28,6 +29,13 @@ export class LoginComponent {
     },
     );
   }
+  private mostrarError() {
+    const errorMsg = this.route.snapshot.queryParamMap.get('mensaje');
+    if (errorMsg) {
+      alert(decodeURIComponent(errorMsg));
+    }
+  }
+
 
   public iniciar() {
     const loginDTO = this.crearLogin.value as LoginDTO;
@@ -47,7 +55,6 @@ export class LoginComponent {
   }
 
   public abrirGoogle() {
-    var url = "";
-    window.location.href = url;
+    window.location.href = 'http://localhost:8080/oauth2/authorization/google';
   }
 }
