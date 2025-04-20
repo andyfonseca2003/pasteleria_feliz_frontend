@@ -9,19 +9,24 @@
                         <div
                             class="top-header card-header p-0 position-relative mt-n4 mx-3 z-index-2 border-radius rounded bg-dark">
                             <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
-                                <h6 class="text-white text-capitalize ps-3">Insumos</h6>
+                                <h6 class="text-white text-capitalize ps-3">Crear usuario</h6>
                             </div>
                         </div>
                         <div class="card-body px-4 pb-2">
                             <form [formGroup]="registroForm" (ngSubmit)="registrar()">
                                 <div class="row mb-3">
-                                    <div class="mb-3 col-6 mx-auto">
-                                        <label class="form-label">Tipo de documento: </label>
-                                        <input type="text" class="form-control" formControlName="typeDocument" />
-                                    </div>
-                                    <div class="mb-3 col-6 mx-auto">
-                                        <label class="form-label">Cédula: </label>
-                                        <input type="text" class="form-control" formControlName="documentNumber" />
+                                    <div class="mb-3 col-12 mx-auto">
+                                        <label class="form-label">Documento de identidad: </label>
+                                        <div class="input-group">
+                                            <select name="" id="" class="form-select  w-25" formControlName="typeDocument" >
+                                                <option value="CC">CC</option>
+                                                <option value="TI">TI</option>
+                                                <option value="CE">CE</option>
+                                                <option value="NIT">NIT</option>
+                                                <option value="PP">PP</option>
+                                            </select>
+                                            <input type="text" class="form-control w-75" formControlName="documentNumber" />
+                                        </div>
                                     </div>
                                     <div class="mb-3 col-6 mx-auto">
                                         <label class="form-label">Primer nombre: </label>
@@ -46,6 +51,14 @@
                                     <div class="mb-3 col-6 mx-auto">
                                         <label class="form-label">Teléfono: </label>
                                         <input type="number" class="form-control" formControlName="phone" />
+                                    </div>
+                                    <div class="mb-3 col-6 mx-auto">
+                                        <label class="form-label">Contraseña: </label>
+                                        <input type="password" class="form-control" formControlName="password" />
+                                    </div>
+                                    <div class="mb-3 col-6 mx-auto">
+                                        <label class="form-label">Confirmar contraseña: </label>
+                                        <input type="password" class="form-control" formControlName="confirmPassword" />
                                     </div>
                                     <div class="row g-0 col-11 text-end justify-content-end">
                                         <!-- Botón Cancelar -->

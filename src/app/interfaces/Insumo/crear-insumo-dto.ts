@@ -4,6 +4,7 @@ export interface CrearInsumoDTO {
     name: string,
     price: string,
     quantity: string,
+    minimumStock: string,
     supplierID: string,
     modify_by: string
 }

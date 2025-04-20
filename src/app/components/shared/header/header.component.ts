@@ -12,7 +12,7 @@ import { TokenService } from '../../../services/token.service';
 })
 export class HeaderComponent {
   nombre: string | null = null;
-  rol: string | null = null;
+  email: string | null = null;
   isLogged = false;
 
   constructor(private tokenService: TokenService) {
@@ -20,7 +20,7 @@ export class HeaderComponent {
       this.isLogged = this.tokenService.isLogged();
       if(this.isLogged){
         this.nombre = this.tokenService.getNombre();
-        this.rol = this.tokenService.getRol();
+        this.email = this.tokenService.getEmail();
       }
     });
 

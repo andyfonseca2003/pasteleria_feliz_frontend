@@ -41,6 +41,10 @@
                         <label>Cantidad</label>
                         <input type="number" class="form-control" formControlName="quantity" [value]="insumo.quantity"/>
                     </div>
+                    <div class="mb-3 col-10 mx-auto">
+                        <label>Stock minimo</label>
+                        <input type="number" class="form-control" formControlName="minimumStock" [value]="insumo.minimumStock"/>
+                    </div>
                     <div class="row g-0 col-11 text-end justify-content-end">
                         <div class="mb-3 mx-1 col-auto">
                             <button (click)="regresar()" class="btn btn-secondary col-auto">Cancelar</button>

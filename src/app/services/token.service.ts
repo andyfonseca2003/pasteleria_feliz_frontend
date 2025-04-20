@@ -35,10 +35,7 @@ export class TokenService {
   }
 
   public isLogged(): boolean {
-    if (this.getToken()) {
-      return true;
-    }
-    return false;
+    return !!this.getToken(); // devuelve true si hay token, false si no
   }
 
   public logout() {
@@ -70,7 +67,7 @@ export class TokenService {
     const token = this.getToken();
     if (token) {
       const values = this.decodePayload(token);
-      return values.rol;
+      return values.isAdmin;
     }
     return "";
   }

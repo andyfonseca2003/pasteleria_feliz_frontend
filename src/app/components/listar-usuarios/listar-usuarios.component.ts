@@ -224,7 +224,7 @@ export class ListarUsuariosComponent {
           next: (response) => {
             Swal.fire({
               title: 'Eliminado',
-              text: 'El proveedor ha sido eliminado correctamente',
+              text: 'El usuario ha sido eliminado correctamente',
               icon: 'success',
               confirmButtonText: 'Aceptar',
               confirmButtonColor: '#3085d6',

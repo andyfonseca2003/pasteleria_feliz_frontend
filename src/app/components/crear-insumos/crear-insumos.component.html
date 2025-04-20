@@ -16,7 +16,7 @@
           <div class="mb-3 col-10 mx-auto">
             <label for="expiration_date">Fecha de expiración</label>
             <input type="datetime-local" id="expiration_date" class="form-control" formControlName="expirationDate"
-              required />
+              [min]="minDateTime" required />
           </div>
           <div class="mb-3 col-10 mx-auto">
             <label for="entry_date">Fecha de entrada</label>
@@ -31,12 +31,14 @@
             <input type="number" class="form-control" formControlName="quantity" />
           </div>
           <div class="mb-3 col-10 mx-auto">
+            <label>Cantidad minima de stock</label>
+            <input type="number" class="form-control" formControlName="minimumStock" />
+          </div>
+          <div class="mb-3 col-10 mx-auto">
             <label>Proveedor</label>
-            <select class="form-control" formControlName="supplierID" id="supplierID">
-              @for (item of proveedores; track $index) {
-              <option value="{{item.supplierID}}">{{item.name}}</option>
-              }
-            </select>
+            <ng-select [items]="proveedores" bindLabel="name" bindValue="supplierID" formControlName="supplierID"
+              placeholder="Seleccione un proveedor" [searchable]="true" class="form-control" id="supplierID">
+            </ng-select>
           </div>
           <div class="row g-0 col-11 text-end justify-content-end">
             <div class="mb-3 mx-1 col-auto">

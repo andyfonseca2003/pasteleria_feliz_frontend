@@ -37,7 +37,7 @@ export class EditarInsumosComponent {
     this.adminService.obtenerInsumo(id).subscribe({
       next: (data) => {
         console.log(data);
-        this.insumo = data;
+        this.insumo = data.respuesta;
 
         // Utilizamos patchValue para actualizar los valores del formulario
         this.editarInsumoForm.patchValue({
@@ -47,6 +47,7 @@ export class EditarInsumosComponent {
           entryDate: this.insumo.entryDate,
           expirationDate: this.insumo.expirationDate,
           quantity: this.insumo.quantity,
+          minimumStock: this.insumo.minimumStock,
           updatedAt: this.insumo.updatedAt
         });
       },
@@ -83,7 +84,6 @@ export class EditarInsumosComponent {
     });
   }
 
-
   private crearFormulario(idInsumo: string = '') {
     this.editarInsumoForm = this.formBuilder.group({
       id: [idInsumo, [Validators.required]], // Carga el ID del insumo
@@ -92,6 +92,7 @@ export class EditarInsumosComponent {
       entryDate: ['', [Validators.required]],
       price: ['', [Validators.required]],
       quantity: ['', [Validators.required]],
+      minimumStock: ['', [Validators.required]],
       updatedAt: ['', [Validators.required]]
     });
   }
