@@ -30,17 +30,20 @@ export class ListarInsumosComponent {
   sortField: string = '';
   sortDirection: 'asc' | 'desc' = 'asc';
   isLoading: boolean = false;
+  isAdmin: boolean = false;
 
   constructor(
     private location: Location,
     private adminService: AdministradorService,
     private userService: UserService,
+    private tokenService: TokenService,
     private router: Router
   ) {
   }
 
   ngOnInit() {
     this.loadPagedInsumos();
+    this.isAdmin = this.tokenService.getIsAdmin();
   }
 
   public loadPagedInsumos() {

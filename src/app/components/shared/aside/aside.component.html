@@ -1,47 +1,51 @@
 <aside class="border-radius rounded bg-white mb-2 h-100 px-3">
-    <div class="sidenav-header px-2 py-3">
-      <i class="bi bi-speedometer2"></i>
-      <a class="navbar-brand py-3" href="/administrador" target="_blank">
-        <span class="ms-1 fw-bold text-dark">Dashboard</span>
-      </a>
-    </div>
-    <hr class="horizontal dark mx-0 mt-0 mb-2">
-    <div id="sidenav-collapse-main">
-      <ul class="navbar-nav">
-        <li class="nav-item px-2">
-          <a class="ps-1 nav-link text-dark"
-             [routerLink]="['/listar-suppliers']"
-             routerLinkActive="active fw-bold text-primary">
-            <i class="bi bi-file-earmark-person"></i>
-            <span class="nav-link-text ms-1">Proveedores</span>
-          </a>
-        </li>
-  
-        <li class="nav-item px-2">
-          <a class="ps-1 nav-link text-dark"
-             [routerLink]="['/listar-insumos']"
-             routerLinkActive="active fw-bold text-primary">
-            <i class="bi bi-cake2"></i>
-            <span class="nav-link-text ms-1">Insumos</span>
-          </a>
-        </li>
-  
-        <li class="nav-item px-2">
-          <a class="ps-1 nav-link text-dark disabled" href="">
-            <i class="bi bi-receipt"></i>
-            <span class="nav-link-text ms-1">Recibos</span>
-          </a>
-        </li>
-  
-        <li class="nav-item px-2">
-          <a class="ps-1 nav-link text-dark"
-             [routerLink]="['/listar-usuarios']"
-             routerLinkActive="active fw-bold text-primary">
-            <i class="bi bi-people-fill"></i>
-            <span class="nav-link-text ms-1">Usuarios</span>
-          </a>
-        </li>
-      </ul>
-    </div>
-  </aside>
-  
+  <div class="sidenav-header px-2 py-3">
+    <i class="bi bi-speedometer2"></i>
+    <a class="navbar-brand py-3" href="/administrador" target="_blank">
+      <span class="ms-1 fw-bold text-dark">Dashboard</span>
+    </a>
+  </div>
+  <hr class="horizontal dark mx-0 mt-0 mb-2">
+  <div id="sidenav-collapse-main">
+    <ul class="navbar-nav">
+      <li class="nav-item px-2">
+        <a class="ps-1 nav-link text-dark" [routerLink]="['/listar-suppliers']"
+          routerLinkActive="active fw-bold text-primary">
+          <i class="bi bi-file-earmark-person"></i>
+          <span class="nav-link-text ms-1">Proveedores</span>
+        </a>
+      </li>
+
+      <li class="nav-item px-2">
+        <a class="ps-1 nav-link text-dark" [routerLink]="['/listar-insumos']"
+          routerLinkActive="active fw-bold text-primary">
+          <i class="bi bi-cake2"></i>
+          <span class="nav-link-text ms-1">Insumos</span>
+        </a>
+      </li>
+      <li class="nav-item px-2" >
+        <a class="ps-1 nav-link text-dark" [routerLink]="['/listar-recetas']"
+          routerLinkActive="active fw-bold text-primary">
+          <i class="bi bi-receipt"></i>
+          <span class="nav-link-text ms-1">Recetas</span>
+        </a>
+      </li>
+
+      <li class="nav-item px-2" [hidden]="true">
+        <a class="ps-1 nav-link text-dark disabled" href="">
+          <i class="bi bi-receipt"></i>
+          <span class="nav-link-text ms-1">Recibos</span>
+        </a>
+      </li>
+      @if (isAdmin) {
+      <li class="nav-item px-2">
+        <a class="ps-1 nav-link text-dark" [routerLink]="['/listar-usuarios']"
+          routerLinkActive="active fw-bold text-primary">
+          <i class="bi bi-people-fill"></i>
+          <span class="nav-link-text ms-1">Usuarios</span>
+        </a>
+      </li>
+      }
+    </ul>
+  </div>
+</aside>

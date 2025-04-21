@@ -140,12 +140,13 @@
                             title="Editar proveedor">
                             <i class="bi bi-pencil"></i>
                           </button>
+                          @if (isAdmin) {
 
                           <button (click)="eliminarSupplier(item.id)" class="btn btn-danger btn-sm"
                             title="Eliminar proveedor">
                             <i class="bi bi-trash"></i>
                           </button>
-
+                        }
                           <button class="btn btn-warning btn-sm" (click)="showInfoModal(item)" title="Ver información">
                             <i class="bi bi-info-circle"></i>
                           </button>

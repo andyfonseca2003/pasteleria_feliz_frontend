@@ -11,6 +11,7 @@ import { SupplierService } from '../../services/supplier.service';
 import { SupplierBackendResponse } from '../../interfaces/supplier/supplier-backend-response';
 import { UserSimplifyResponseDto } from '../../interfaces/user/user-simplify-response-dto';
 import { UserService } from '../../services/user.service';
+import { TokenService } from '../../services/token.service';
 
 @Component({
   selector: 'app-listar-suppliers',
@@ -36,23 +37,27 @@ export class ListarSuppliersComponent {
   sortField: string = '';
   sortDirection: 'asc' | 'desc' = 'asc';
   isLoading: boolean = false;
+  isAdmin: boolean = false;
 
   constructor(
     private location: Location,
     private supplierService: SupplierService,
     private userService: UserService,
-    private router: Router
+    private router: Router,
+    private tokenService: TokenService,
+
   ) {
     this.loadPagedSuppliers();
+    this.isAdmin = this.tokenService.getIsAdmin();
   }
 
   public loadPagedSuppliers() {
     this.isLoading = true;
-    
+
     this.supplierService.getPagedSuppliers(
-      this.currentPage, 
-      this.pageSize, 
-      this.sortField, 
+      this.currentPage,
+      this.pageSize,
+      this.sortField,
       this.sortDirection,
       this.searchTerm
     ).subscribe({
@@ -68,18 +73,18 @@ export class ListarSuppliersComponent {
           });
           return;
         }
-        
+
         this.suppliers = data.respuesta.content.map((supplier: SupplierBackendResponse) => {
           return {
             ...supplier,
             taxId: supplier.supplierID
           } as SupplierDTO;
         });
-        
+
         this.currentPage = data.respuesta.pageNumber;
         this.totalPages = data.respuesta.totalPages;
         this.totalItems = data.respuesta.totalElements;
-        
+
         // Como los datos ya vienen filtrados y ordenados del servidor,
         // simplemente los asignamos directamente
         this.filteredSuppliers = [...this.suppliers];
@@ -97,14 +102,14 @@ export class ListarSuppliersComponent {
       }
     });
   }
-  
+
   // Método para aplicar filtros y ordenamiento
   applyFilters() {
     // Primero aplicamos la búsqueda
     if (this.searchTerm) {
       const term = this.searchTerm.toLowerCase();
-      this.filteredSuppliers = this.suppliers.filter(supplier => 
-        supplier.name?.toLowerCase().includes(term) || 
+      this.filteredSuppliers = this.suppliers.filter(supplier =>
+        supplier.name?.toLowerCase().includes(term) ||
         supplier.id?.toString().includes(term) ||
         supplier.email?.toLowerCase().includes(term) ||
         supplier.contactPerson?.toLowerCase().includes(term)
@@ -118,21 +123,21 @@ export class ListarSuppliersComponent {
       this.filteredSuppliers.sort((a, b) => {
         const valueA = a[this.sortField as keyof SupplierDTO];
         const valueB = b[this.sortField as keyof SupplierDTO];
-        
+
         if (valueA === undefined || valueB === undefined) return 0;
-        
+
         let comparison = 0;
         if (typeof valueA === 'string' && typeof valueB === 'string') {
           comparison = valueA.localeCompare(valueB);
         } else {
           comparison = valueA < valueB ? -1 : (valueA > valueB ? 1 : 0);
         }
-        
+
         return this.sortDirection === 'asc' ? comparison : -comparison;
       });
     }
   }
-  
+
   sortBy(field: string) {
     if (this.sortField === field) {
       // Si ya estamos ordenando por este campo, cambiamos la dirección
@@ -142,25 +147,25 @@ export class ListarSuppliersComponent {
       this.sortField = field;
       this.sortDirection = 'asc';
     }
-    
+
     // Cargamos los datos con el nuevo orden
     this.loadPagedSuppliers();
   }
-  
+
   // Método para buscar
   onSearch() {
     // Reiniciamos a la primera página al buscar
     this.currentPage = 0;
     this.loadPagedSuppliers();
   }
-  
+
   // Método para limpiar la búsqueda
   clearSearch() {
     this.searchTerm = '';
     this.currentPage = 0;
     this.loadPagedSuppliers();
   }
-  
+
   goToPreviousPage() {
     if (this.currentPage > 0) {
       this.currentPage--;
@@ -174,7 +179,7 @@ export class ListarSuppliersComponent {
       this.loadPagedSuppliers();
     }
   }
-  
+
   goToPage(page: number) {
     if (page >= 0 && page < this.totalPages) {
       this.currentPage = page;
@@ -187,16 +192,16 @@ export class ListarSuppliersComponent {
     const maxVisiblePages = 5;
     let startPage = Math.max(0, this.currentPage - 2);
     let endPage = Math.min(this.totalPages - 1, startPage + maxVisiblePages - 1);
-    
+
     // Ajustar startPage si estamos cerca del final
     if (endPage - startPage + 1 < maxVisiblePages) {
       startPage = Math.max(0, endPage - maxVisiblePages + 1);
     }
-    
+
     for (let i = startPage; i <= endPage; i++) {
       range.push(i);
     }
-    
+
     return range;
   }
 
@@ -211,7 +216,7 @@ export class ListarSuppliersComponent {
       });
       return;
     }
-  
+
     Swal.fire({
       title: '¿Estás seguro?',
       text: 'Esta acción no se puede deshacer',
@@ -263,7 +268,7 @@ export class ListarSuppliersComponent {
           });
           return;
         }
-        
+
         this.suppliers = data.respuesta;
         this.applyFilters();
       },
@@ -302,9 +307,9 @@ export class ListarSuppliersComponent {
   showReviewModal(supplier: SupplierDTO) {
     // Comprobar si hay alguna reseña registrada
     const hasReview = supplier.lastOrderDate || supplier.lastReviewRating || supplier.lastReviewComment;
-    
+
     let modalHtml = '';
-    
+
     if (!hasReview) {
       // Si no hay reseña, mostrar un mensaje indicando que no hay reseñas aún
       modalHtml = `
@@ -323,18 +328,18 @@ export class ListarSuppliersComponent {
       // Si hay reseña, procesar normalmente
       // Determinar si es una reseña negativa: si tiene problemas de calidad O problemas de puntualidad
       // O si la calificación es menor a 3
-      const isNegativeReview = supplier.qualityIssues || !supplier.onTimeDelivery || 
+      const isNegativeReview = supplier.qualityIssues || !supplier.onTimeDelivery ||
         (supplier.lastReviewRating && supplier.lastReviewRating < 3);
-      
+
       let reviewClass = isNegativeReview ? 'text-danger' : 'text-success';
       let reviewIcon = isNegativeReview ? 'bi bi-exclamation-triangle-fill' : 'bi bi-check-circle-fill';
       let reviewBackground = 'bg-light';
       let reviewBorder = isNegativeReview ? 'border-danger' : 'border-success';
-      
+
       // Obtener la fecha formateada de la última reseña
-      const lastReviewDay = supplier.lastOrderDate ? 
+      const lastReviewDay = supplier.lastOrderDate ?
         this.obtenerSoloDia(supplier.lastOrderDate) : 'No hay registros';
-      
+
       modalHtml = `
         <div class="review-container p-4 ${reviewBackground} border ${reviewBorder}">
           <div class="d-flex align-items-center mb-3">
@@ -378,7 +383,7 @@ export class ListarSuppliersComponent {
         </div>
       `;
     }
-    
+
     Swal.fire({
       title: `Reseña de ${supplier.name}`,
       html: modalHtml,
@@ -395,41 +400,41 @@ export class ListarSuppliersComponent {
     const fullStars = Math.floor(rating);
     const halfStar = rating % 1 >= 0.5;
     const emptyStars = 5 - fullStars - (halfStar ? 1 : 0);
-    
+
     let starsHtml = '';
-    
+
     // Estrellas completas
     for (let i = 0; i < fullStars; i++) {
       starsHtml += '<i class="bi bi-star-fill text-warning"></i>';
     }
-    
+
     // Media estrella si aplica
     if (halfStar) {
       starsHtml += '<i class="bi bi-star-half text-warning"></i>';
     }
-    
+
     for (let i = 0; i < emptyStars; i++) {
       starsHtml += '<i class="bi bi-star text-warning"></i>';
     }
-    
+
     return starsHtml;
   }
 
   private formatearFecha(fechaStr: string): string {
     if (!fechaStr) return 'No disponible';
-    
+
     try {
       const fecha = new Date(fechaStr);
-      
+
       const opciones: Intl.DateTimeFormatOptions = {
         day: '2-digit',
-        month: '2-digit', 
+        month: '2-digit',
         year: 'numeric',
         hour: '2-digit',
         minute: '2-digit',
         hour12: true
       };
-      
+
       return fecha.toLocaleDateString('es-ES', opciones);
     } catch (error) {
       console.error('Error al formatear la fecha:', error);
@@ -439,17 +444,17 @@ export class ListarSuppliersComponent {
 
   private obtenerSoloDia(fechaStr: string): string {
     if (!fechaStr) return 'No disponible';
-    
+
     try {
       const fecha = new Date(fechaStr);
-      
+
       const opciones: Intl.DateTimeFormatOptions = {
         weekday: 'long',
-        day: 'numeric', 
+        day: 'numeric',
         month: 'long',
         year: 'numeric'
       };
-      
+
       return fecha.toLocaleDateString('es-ES', opciones);
     } catch (error) {
       console.error('Error al formatear la fecha:', error);
@@ -460,14 +465,14 @@ export class ListarSuppliersComponent {
   showInfoModal(supplier: SupplierDTO) {
     // Valores por defecto
     let usuarioModificador = 'No disponible';
-    
+
     // Preparamos las fechas formateadas
     const createdAtFormatted = this.formatearFecha(supplier.createdAt || '');
     const updatedAtFormatted = this.formatearFecha(supplier.updatedAt || '');
-    
+
     // Contador para peticiones pendientes
     let pendingRequests = 0;
-    
+
     // Función para mostrar el modal
     const showModal = () => {
       Swal.fire({
@@ -481,7 +486,7 @@ export class ListarSuppliersComponent {
         confirmButtonText: 'Cerrar'
       });
     };
-    
+
     // Función para verificar completitud
     const checkComplete = () => {
       pendingRequests--;
@@ -489,7 +494,7 @@ export class ListarSuppliersComponent {
         showModal();
       }
     };
-    
+
     // Si hay usuario modificador, lo obtenemos
     if (supplier.userModify) {
       pendingRequests++;
@@ -507,13 +512,13 @@ export class ListarSuppliersComponent {
         }
       });
     }
-    
+
     // Si no hay peticiones pendientes, mostramos el modal de inmediato
     if (pendingRequests === 0) {
       showModal();
     }
   }
-  
+
   // Agrega la función para formatear el nombre del usuario si no existe
   private formatearNombreUsuario(userData: UserSimplifyResponseDto): string {
     const typeDoc = userData.typeDocument || '';
@@ -522,12 +527,12 @@ export class ListarSuppliersComponent {
     const secondName = userData.second_name || '';
     const lastName = userData.last_name || '';
     const secondLastName = userData.second_last_name || '';
-    
+
     const docInfo = `${typeDoc} ${docNum}`;
     const nameInfo = [firstName, secondName, lastName, secondLastName]
       .filter(part => part.trim() !== '')
       .join(' ');
-      
+
     return `${docInfo} - ${nameInfo}`;
   }
 

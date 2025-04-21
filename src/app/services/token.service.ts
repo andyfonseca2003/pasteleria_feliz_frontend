@@ -90,6 +90,16 @@ export class TokenService {
     return "";
   }
 
+  
+  public getIsAdmin(): boolean {
+    const token = this.getToken();
+    if (token) {
+      const values = this.decodePayload(token);
+      return values.isAdmin === true;
+    }
+    return false;
+  }
+
   public login(token: string) {
     this.setToken(token);
     this.setNombreUsuario(this.getNombre());

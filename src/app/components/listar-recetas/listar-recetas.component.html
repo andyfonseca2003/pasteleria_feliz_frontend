@@ -1,0 +1,164 @@
+<div class="container-fluid row mx-auto">
+    <app-aside class="p-0 m-0 col-2"></app-aside>
+    <div class="col-10 main-content position-relative max-height-vh-100 h-100 border-radius-lg">
+        <div class="container-fluid py-2">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card my-4">
+                        <div
+                            class="top-header card-header p-0 position-relative mt-n4 mx-3 z-index-2 border-radius rounded bg-dark">
+                            <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
+                                <h6 class="text-white text-capitalize ps-3">Recetas</h6>
+                            </div>
+                        </div>
+
+                        <div class="search-and-filters row mx-0 mt-3 mb-2 px-3">
+                            <div class="col-md-6">
+                                <div class="input-group">
+                                    <input type="text" class="form-control" placeholder="Buscar por nombre o categoría"
+                                        [(ngModel)]="searchTerm" (keyup.enter)="onSearch()">
+                                    <button class="btn btn-outline-primary" type="button" (click)="onSearch()">
+                                        <i class="bi bi-search"></i>
+                                    </button>
+                                    <button class="btn btn-outline-secondary" type="button" (click)="clearSearch()">
+                                        <i class="bi bi-x-lg"></i>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class="col-md-6 text-end">
+                                <a [routerLink]="['/crear-recetas']" class="btn btn-primary">
+                                    <i class="bi bi-plus-circle"></i>
+                                    Crear receta
+                                </a>
+                            </div>
+                        </div>
+
+                        <div *ngIf="isLoading" class="d-flex justify-content-center my-3">
+                            <div class="spinner-border text-primary" role="status">
+                                <span class="visually-hidden">Cargando...</span>
+                            </div>
+                        </div>
+
+                        <div class="card-body px-0 pb-2">
+                            <div class="table-responsive p-0">
+                                <table class="table align-items-center mb-0 col-12">
+                                    <thead>
+                                        <tr>
+                                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 sortable-header"
+                                                (click)="sortBy('id')">
+                                                ID <i [ngClass]="getSortIcon('id')" class="ms-1"></i>
+                                            </th>
+                                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 sortable-header"
+                                                (click)="sortBy('name')">
+                                                Nombre <i [ngClass]="getSortIcon('name')" class="ms-1"></i>
+                                            </th>
+                                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 sortable-header"
+                                                (click)="sortBy('portions')">
+                                                Cantidad <i [ngClass]="getSortIcon('portions')" class="ms-1"></i>
+                                            </th>
+                                            <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 sortable-header"
+                                                (click)="sortBy('preparationTimeMinutes')">
+                                                Tiempo de preparación <i
+                                                    [ngClass]="getSortIcon('preparationTimeMinutes')" class="ms-1"></i>
+                                            </th>
+                                            <th
+                                                class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                                                Acciones
+                                            </th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr *ngIf="filteredRecetas.length === 0 && !isLoading">
+                                            <td colspan="4" class="text-center py-4">
+                                                <i class="bi bi-search fs-3 text-muted mb-2 d-block"></i>
+                                                <p class="mb-0">No se encontraron recetas que coincidan con tu búsqueda
+                                                </p>
+                                                <button class="btn btn-sm btn-outline-primary mt-2"
+                                                    (click)="clearSearch()">Limpiar búsqueda</button>
+                                            </td>
+                                        </tr>
+
+                                        <tr *ngFor="let receta of filteredRecetas">
+                                            <td>
+                                                <div class="d-flex px-2 py-1 justify-content-center">
+                                                    <div class="d-flex flex-column justify-content-center">
+                                                        <h6 class="mb-0 text-sm">{{receta.id }}</h6>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex px-2 py-1 justify-content-center">
+                                                    <div class="d-flex flex-column justify-content-center">
+                                                        <h6 class="mb-0 text-sm">{{receta.name}}</h6>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex px-2 py-1 justify-content-center">
+                                                    <div class="d-flex flex-column justify-content-center">
+                                                        <h6 class="mb-0 text-sm">{{receta.portions}}</h6>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td>
+                                                <div class="d-flex px-2 py-1 justify-content-center">
+                                                    <div class="d-flex flex-column justify-content-center">
+                                                        <h6 class="mb-0 text-sm">{{ receta.preparationTimeMinutes }} mn
+                                                        </h6>
+                                                    </div>
+                                                </div>
+                                            </td>
+                                            <td class="align-middle text-center">
+                                                <div class="btn-group btn-group-sm" role="group">
+                                                    <button class="btn btn-secondary btn-sm"
+                                                        (click)="openEditarReceta(receta.id)" title="Editar receta">
+                                                        <i class="bi bi-pencil"></i>
+                                                    </button>
+                                                    @if (isAdmin) {
+                                                    <button (click)="eliminarReceta(receta.id)"
+                                                        class="btn btn-danger btn-sm" title="Eliminar receta">
+                                                        <i class="bi bi-trash"></i>
+                                                    </button>
+                                                    }
+                                                </div>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+
+                                <div class="pagination-container d-flex justify-content-center mt-4">
+                                    <nav aria-label="Navegación de recetas">
+                                        <ul class="pagination">
+                                            <li class="page-item" [class.disabled]="currentPage === 0">
+                                                <button class="page-link" (click)="goToPreviousPage()"><i
+                                                        class="bi bi-chevron-left"></i></button>
+                                            </li>
+                                            @for (pageIdx of getPaginationRange(); track pageIdx) {
+                                            <li class="page-item" [class.active]="pageIdx === currentPage">
+                                                <button class="page-link" (click)="goToPage(pageIdx)">{{ pageIdx + 1
+                                                    }}</button>
+                                            </li>
+                                            }
+                                            <li class="page-item" [class.disabled]="currentPage === totalPages - 1">
+                                                <button class="page-link" (click)="goToNextPage()"><i
+                                                        class="bi bi-chevron-right"></i></button>
+                                            </li>
+                                        </ul>
+                                    </nav>
+                                </div>
+
+                                <div class="text-center mt-3">
+                                    <span class="pagination-info">
+                                        <i class="bi bi-file-earmark-text me-1"></i>
+                                        Mostrando {{ recetas.length }} de {{ totalItems }} recetas |
+                                        Página {{ currentPage + 1 }} de {{ totalPages }}
+                                    </span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

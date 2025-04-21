@@ -3,15 +3,14 @@ import { Router, RouterLink } from '@angular/router';
 import { Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { AdministradorService } from '../../services/administrador.service';
 import { AsideComponent } from '../shared/aside/aside.component';
 import Swal, { SweetAlertResult } from 'sweetalert2';
-import { UserService } from '../../services/user.service';
-import { UserBackendResponse } from '../../interfaces/user/user-backend-response';
-import { UserSimplifyResponseDto } from '../../interfaces/user/user-simplify-response-dto';
+import { RecetaService } from '../../services/receta.service';
+import { RecetaDTO } from '../../interfaces/Receta/receta-dto';
+import { TokenService } from '../../services/token.service';
 
 @Component({
-  selector: 'app-listar-usuarios',
+  selector: 'app-listar-recetas',
   standalone: true,
   imports: [
     RouterLink,
@@ -19,13 +18,13 @@ import { UserSimplifyResponseDto } from '../../interfaces/user/user-simplify-res
     FormsModule,
     CommonModule
   ],
-  templateUrl: './listar-usuarios.component.html',
-  providers: [AdministradorService],
-  styleUrl: './listar-usuarios.component.css'
+  templateUrl: './listar-recetas.component.html',
+  providers: [RecetaService],
+  styleUrl: './listar-recetas.component.css'
 })
-export class ListarUsuariosComponent {
-  usuarios: UserBackendResponse[] = [];
-  filteredUsuarios: UserBackendResponse[] = [];
+export class ListarRecetasComponent {
+  recetas: RecetaDTO[] = [];
+  filteredRecetas: RecetaDTO[] = [];
   currentPage: number = 0;
   pageSize: number = 10;
   totalPages: number = 0;
@@ -33,20 +32,23 @@ export class ListarUsuariosComponent {
   searchTerm: string = '';
   sortField: string = '';
   sortDirection: 'asc' | 'desc' = 'asc';
+  isAdmin: boolean = false;
   isLoading: boolean = false;
 
   constructor(
     private location: Location,
-    private userService: UserService,
+    private recetaService: RecetaService,
+    private tokenService: TokenService,
     private router: Router
   ) {
-    this.loadPagedUsuarios();
+    this.loadPagedRecetas();
+    this.isAdmin = this.tokenService.getIsAdmin();
   }
 
-  public loadPagedUsuarios() {
+  public loadPagedRecetas() {
     this.isLoading = true;
 
-    this.userService.getPagedUsers(
+    this.recetaService.getPagedRecetas(
       this.currentPage,
       this.pageSize,
       this.sortField,
@@ -58,7 +60,7 @@ export class ListarUsuariosComponent {
         if (data.error) {
           Swal.fire({
             title: 'Error',
-            text: data.respuesta || 'No se pudieron cargar los usuarios',
+            text: data.respuesta || 'No se pudieron cargar las recetas',
             icon: 'error',
             confirmButtonText: 'Aceptar',
             confirmButtonColor: '#8b0000',
@@ -66,27 +68,19 @@ export class ListarUsuariosComponent {
           return;
         }
 
-        this.usuarios = data.respuesta.content.map((user: UserBackendResponse) => {
-          return {
-            ...user,
-            documentNumber: user.documentNumber
-          } as UserBackendResponse;
-        });
-
+        this.recetas = data.respuesta.content;
         this.currentPage = data.respuesta.pageNumber;
         this.totalPages = data.respuesta.totalPages;
         this.totalItems = data.respuesta.totalElements;
 
-        // Como los datos ya vienen filtrados y ordenados del servidor,
-        // simplemente los asignamos directamente
-        this.filteredUsuarios = [...this.usuarios];
+        this.filteredRecetas = [...this.recetas];
       },
       error: (error) => {
         this.isLoading = false;
-        console.error('Error al cargar usuarios:', error);
+        console.error('Error al cargar recetas:', error);
         Swal.fire({
           title: 'Error',
-          text: error.error?.data || 'No se pudieron cargar los usuarios',
+          text: error.error?.data || 'No se pudieron cargar las recetas',
           icon: 'error',
           confirmButtonText: 'Aceptar',
           confirmButtonColor: '#8b0000',
@@ -95,27 +89,22 @@ export class ListarUsuariosComponent {
     });
   }
 
-  // Método para aplicar filtros y ordenamiento
   applyFilters() {
-    // Primero aplicamos la búsqueda
     if (this.searchTerm) {
       const term = this.searchTerm.toLowerCase();
-      this.filteredUsuarios = this.usuarios.filter(user =>
-        user.id?.toString().includes(term) ||
-        user.documentNumber?.toString().includes(term) ||
-        user.first_name?.toLowerCase().includes(term) ||
-        user.last_name?.toLowerCase().includes(term) ||
-        user.email?.toLowerCase().includes(term)
+      this.filteredRecetas = this.recetas.filter(receta =>
+        receta.id?.toString().includes(term)
+        // receta.nombre?.toLowerCase().includes(term) ||
+        // receta.descripcion?.toLowerCase().includes(term)
       );
     } else {
-      this.filteredUsuarios = [...this.usuarios];
+      this.filteredRecetas = [...this.recetas];
     }
 
-    // Luego aplicamos el ordenamiento si es necesario
     if (this.sortField) {
-      this.filteredUsuarios.sort((a, b) => {
-        const valueA = a[this.sortField as keyof UserBackendResponse];
-        const valueB = b[this.sortField as keyof UserBackendResponse];
+      this.filteredRecetas.sort((a, b) => {
+        const valueA = a[this.sortField as keyof RecetaDTO];
+        const valueB = b[this.sortField as keyof RecetaDTO];
 
         if (valueA === undefined || valueB === undefined) return 0;
 
@@ -133,50 +122,44 @@ export class ListarUsuariosComponent {
 
   sortBy(field: string) {
     if (this.sortField === field) {
-      // Si ya estamos ordenando por este campo, cambiamos la dirección
       this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
     } else {
-      // Si es un nuevo campo, establecemos la dirección a ascendente
       this.sortField = field;
       this.sortDirection = 'asc';
     }
 
-    // Cargamos los datos con el nuevo orden
-    this.loadPagedUsuarios();
+    this.loadPagedRecetas();
   }
 
-  // Método para buscar
   onSearch() {
-    // Reiniciamos a la primera página al buscar
     this.currentPage = 0;
-    this.loadPagedUsuarios();
+    this.loadPagedRecetas();
   }
 
-  // Método para limpiar la búsqueda
   clearSearch() {
     this.searchTerm = '';
     this.currentPage = 0;
-    this.loadPagedUsuarios();
+    this.loadPagedRecetas();
   }
 
   goToPreviousPage() {
     if (this.currentPage > 0) {
       this.currentPage--;
-      this.loadPagedUsuarios();
+      this.loadPagedRecetas();
     }
   }
 
   goToNextPage() {
     if (this.currentPage < this.totalPages - 1) {
       this.currentPage++;
-      this.loadPagedUsuarios();
+      this.loadPagedRecetas();
     }
   }
 
   goToPage(page: number) {
     if (page >= 0 && page < this.totalPages) {
       this.currentPage = page;
-      this.loadPagedUsuarios();
+      this.loadPagedRecetas();
     }
   }
 
@@ -186,7 +169,6 @@ export class ListarUsuariosComponent {
     let startPage = Math.max(0, this.currentPage - 2);
     let endPage = Math.min(this.totalPages - 1, startPage + maxVisiblePages - 1);
 
-    // Ajustar startPage si estamos cerca del final
     if (endPage - startPage + 1 < maxVisiblePages) {
       startPage = Math.max(0, endPage - maxVisiblePages + 1);
     }
@@ -198,11 +180,11 @@ export class ListarUsuariosComponent {
     return range;
   }
 
-  public eliminarUser(id: number | undefined): void {
+  public eliminarReceta(id: number | undefined): void {
     if (!id) {
       Swal.fire({
         title: 'Error',
-        text: 'No se puede eliminar este usuario porque no tiene un ID válido',
+        text: 'No se puede eliminar esta receta porque no tiene un ID válido',
         icon: 'error',
         confirmButtonText: 'Aceptar',
         confirmButtonColor: '#8b0000',
@@ -221,23 +203,23 @@ export class ListarUsuariosComponent {
       confirmButtonText: 'Sí, eliminar'
     }).then((result: SweetAlertResult<any>) => {
       if (result.isConfirmed) {
-        this.userService.deleteUser(id).subscribe({
-          next: (response) => {
+        this.recetaService.deleteReceta(id).subscribe({
+          next: () => {
             Swal.fire({
               title: 'Eliminado',
-              text: 'El usuario ha sido eliminado correctamente',
+              text: 'La receta ha sido eliminada correctamente',
               icon: 'success',
               confirmButtonText: 'Aceptar',
               confirmButtonColor: '#3085d6',
             });
 
-            this.loadPagedUsuarios();
+            this.loadPagedRecetas();
           },
           error: (error) => {
-            console.error('Error al eliminar usuario:', error);
+            console.error('Error al eliminar receta:', error);
             Swal.fire({
               title: 'Error',
-              text: error.error?.data || 'No se pudo eliminar el proveedor',
+              text: error.error?.data || 'No se pudo eliminar la receta',
               icon: 'error',
               confirmButtonText: 'Aceptar',
               confirmButtonColor: '#8b0000',
@@ -248,14 +230,13 @@ export class ListarUsuariosComponent {
     });
   }
 
-  // Método para editar un proveedor
-  public openEditarUser(id: number | undefined) {
+  public openEditarReceta(id: number | undefined) {
     if (id) {
-      this.router.navigate(['/editar-usuarios', id]);
+      this.router.navigate(['/editar-recetas/', id]);
     } else {
       Swal.fire({
         title: 'Error',
-        text: 'No se puede editar este usuario porque no tiene un ID válido',
+        text: 'No se puede editar esta receta porque no tiene un ID válido',
         icon: 'error',
         confirmButtonText: 'Aceptar',
         confirmButtonColor: '#8b0000',
@@ -267,24 +248,6 @@ export class ListarUsuariosComponent {
     this.location.back();
   }
 
-  // Agrega la función para formatear el nombre del usuario si no existe
-  private formatearNombreUsuario(userData: UserSimplifyResponseDto): string {
-    const typeDoc = userData.typeDocument || '';
-    const docNum = userData.documentNumber || '';
-    const firstName = userData.first_name || '';
-    const secondName = userData.second_name || '';
-    const lastName = userData.last_name || '';
-    const secondLastName = userData.second_last_name || '';
-
-    const docInfo = `${typeDoc} ${docNum}`;
-    const nameInfo = [firstName, secondName, lastName, secondLastName]
-      .filter(part => part.trim() !== '')
-      .join(' ');
-
-    return `${docInfo} - ${nameInfo}`;
-  }
-
-  // Obtener el ícono de ordenamiento para la columna
   getSortIcon(field: string): string {
     if (this.sortField !== field) {
       return 'bi bi-arrow-down-up';

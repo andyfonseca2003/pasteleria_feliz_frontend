@@ -1,0 +1,62 @@
+<div class="container-fluid row mx-auto">
+    <app-aside class="p-0 m-0 col-2"></app-aside>
+    <div class="col-10 main-content position-relative max-height-vh-100 h-100 border-radius-lg">
+      <div class="card col-12 my-4 mx-auto">
+        <div class="top-header card-header p-0 position-relative mt-n4 mx-3 z-index-2 border-radius rounded bg-dark">
+          <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
+            <h6 class="text-white text-capitalize ps-3">{{ formTitle }}</h6>
+          </div>
+        </div>
+        <div class="card-body">
+          <form [formGroup]="recipeForm" (ngSubmit)="onSubmit()">
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label class="form-label" for="name">Nombre de la Receta*</label>
+                <input type="text" class="form-control" formControlName="name" id="name">
+                <div *ngIf="recipeForm.get('name')?.invalid && recipeForm.get('name')?.touched" class="text-danger mt-1">
+                  <small *ngIf="recipeForm.get('name')?.errors?.['required']">El nombre es requerido</small>
+                  <small *ngIf="recipeForm.get('name')?.errors?.['minlength']">Debe tener al menos 3 caracteres</small>
+                </div>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="preparationTimeMinutes">Tiempo de preparación (minutos)</label>
+                <input type="number" class="form-control" formControlName="preparationTimeMinutes" id="preparationTimeMinutes">
+              </div>
+            </div>
+  
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label class="form-label" for="portions">Cantidades\Porciones</label>
+                <input type="number" class="form-control" formControlName="portions" id="portions">
+              </div>
+              <div class="col-md-6">
+                <label class="form-label" for="status">Estado</label>
+                <select class="form-select" formControlName="status" id="status">
+                  <option value="ACTIVO">Activa</option>
+                  <option value="INACTIVO">Inactiva</option>
+                </select>
+              </div>
+            </div>
+  
+            <div class="row mb-3">
+              <div class="col-md-12">
+                <label class="form-label" for="description">Descripción</label>
+                <textarea class="form-control" formControlName="description" id="description" rows="3"></textarea>
+              </div>
+            </div>
+  
+            <div class="mt-4 d-flex justify-content-between">
+              <button type="button" class="btn btn-outline-secondary" (click)="regresar()">
+                <i class="bi bi-arrow-left me-1"></i> Regresar
+              </button>
+  
+              <button type="submit" class="btn btn-primary">
+                <i class="bi bi-save me-1"></i> {{ submitButtonText }}
+              </button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  

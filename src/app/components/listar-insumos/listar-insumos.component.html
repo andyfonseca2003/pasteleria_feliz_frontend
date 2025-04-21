@@ -153,12 +153,12 @@
                             title="Editar insumo">
                             <i class="bi bi-pencil"></i>
                           </button>
-
+                          @if (isAdmin) {
                           <button (click)="eliminarInsumo(item.id)" class="btn btn-danger btn-sm"
                             title="Eliminar insumo">
                             <i class="bi bi-trash"></i>
                           </button>
-
+                        }
                           <button class="btn btn-warning btn-sm" (click)="showRotacionModal(item)"
                             title="Ver rotación de stock">
                             <i class="bi bi-arrow-repeat"></i>

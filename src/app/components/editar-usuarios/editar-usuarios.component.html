@@ -1,0 +1,118 @@
+<div class="container-fluid row mx-auto">
+  <app-aside class="p-0 m-0 col-2"></app-aside>
+  <div class="col-10 main-content position-relative max-height-vh-100 h-100 border-radius-lg">
+    <div class="container-fluid py-2">
+      <div class="row">
+        <div class="col-12">
+          <div class="card my-4">
+            <div
+              class="top-header card-header p-0 position-relative mt-n4 mx-3 z-index-2 border-radius rounded bg-dark">
+              <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
+                <h6 class="text-white text-capitalize ps-3">{{ formTitle }}</h6>
+              </div>
+            </div>
+
+            <div class="card-body px-4 pb-2">
+              <!-- Spinner de carga -->
+              <div *ngIf="loading" class="d-flex justify-content-center my-5">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Cargando...</span>
+                </div>
+              </div>
+
+              <!-- Formulario -->
+              <form *ngIf="!loading" [formGroup]="userForm" (ngSubmit)="onSubmit()">
+                <div class="row mb-3">
+                  <!-- Documento -->
+                  <div class="mb-3 col-12 mx-auto">
+                    <label class="form-label">Documento de identidad: </label>
+                    <div class="input-group">
+                      <select class="form-select w-25" formControlName="typeDocument">
+                        <option value="CC">CC</option>
+                        <option value="TI">TI</option>
+                        <option value="CE">CE</option>
+                        <option value="NIT">NIT</option>
+                        <option value="PP">PP</option>
+                      </select>
+                      <input type="text" class="form-control w-75" formControlName="documentNumber" />
+                    </div>
+                    <div
+                      *ngIf="userForm.get('documentNumber')?.invalid && userForm.get('documentNumber')?.touched"
+                      class="text-danger">
+                      <small *ngIf="userForm.get('documentNumber')?.errors?.['required']">El número de documento es
+                        requerido</small>
+                    </div>
+                  </div>
+
+                  <!-- Primer nombre -->
+                  <div class="mb-3 col-6 mx-auto">
+                    <label class="form-label">Primer nombre: </label>
+                    <input type="text" class="form-control" formControlName="firstName" />
+                    <div *ngIf="userForm.get('firstName')?.invalid && userForm.get('firstName')?.touched"
+                      class="text-danger">
+                      <small>El primer nombre es requerido</small>
+                    </div>
+                  </div>
+
+                  <!-- Segundo nombre -->
+                  <div class="mb-3 col-6 mx-auto">
+                    <label class="form-label">Segundo nombre: </label>
+                    <input type="text" class="form-control" formControlName="secondName" />
+                  </div>
+
+                  <!-- Primer apellido -->
+                  <div class="mb-3 col-6 mx-auto">
+                    <label class="form-label">Primer apellido: </label>
+                    <input type="text" class="form-control" formControlName="lastName" />
+                    <div *ngIf="userForm.get('lastName')?.invalid && userForm.get('lastName')?.touched"
+                      class="text-danger">
+                      <small>El primer apellido es requerido</small>
+                    </div>
+                  </div>
+
+                  <!-- Segundo apellido -->
+                  <div class="mb-3 col-6 mx-auto">
+                    <label class="form-label">Segundo Apellido: </label>
+                    <input type="text" class="form-control" formControlName="secondLastName" />
+                  </div>
+
+                  <!-- Email -->
+                  <div class="mb-3 col-6 mx-auto">
+                    <label class="form-label">Email: </label>
+                    <input type="email" class="form-control" formControlName="email" />
+                    <div *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched"
+                      class="text-danger">
+                      <small *ngIf="userForm.get('email')?.errors?.['required']">El correo es requerido</small>
+                      <small *ngIf="userForm.get('email')?.errors?.['email']">Formato de correo inválido</small>
+                    </div>
+                  </div>
+
+                  <!-- Teléfono -->
+                  <div class="mb-3 col-6 mx-auto">
+                    <label class="form-label">Teléfono: </label>
+                    <input type="number" class="form-control" formControlName="phone" />
+                    <div *ngIf="userForm.get('phone')?.invalid && userForm.get('phone')?.touched"
+                      class="text-danger">
+                      <small *ngIf="userForm.get('phone')?.errors?.['required']">El teléfono es requerido</small>
+                      <small *ngIf="userForm.get('phone')?.errors?.['maxlength']">Debe tener máximo 10
+                        dígitos</small>
+                    </div>
+                  </div>
+
+                   <!-- Botones de acción -->
+                   <div class="row mt-4">
+                    <div class="col-12 d-flex justify-content-end">
+                      <button type="button" class="btn btn-outline-secondary me-2" (click)="regresar()">
+                        <i class="bi bi-arrow-left"></i> Cancelar
+                      </button>
+                      <button type="submit" class="btn btn-dark">
+                        <i class="bi bi-save"></i> Actualizar
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              </form>
+            </div>
+          </div>
+        </div>
+      </div>

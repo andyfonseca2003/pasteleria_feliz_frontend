@@ -24,7 +24,7 @@ import { SupplierFormData } from '../../interfaces/supplier/supplier-form-data';
 export class EditarSupplierComponent implements OnInit {
   supplierForm!: FormGroup;
   isEditing = true;
-  formTitle = 'Editar Proveedor';
+  formTitle = 'Editar proveedor';
   submitButtonText = 'Actualizar';
   showRatingFields = false;
   supplierId: number = 0;

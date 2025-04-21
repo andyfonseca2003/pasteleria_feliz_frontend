@@ -1,15 +1,15 @@
-export interface UserBackendResponse {
+export interface UserUpdateResponse {
     id?: number;  // Optional for creation
     documentNumber?: number;  // Optional for creation
     typeDocument?: string; // Added from backend
     phone: string;  
     position: string;
     email: string;
-    first_name: string;
-    second_name: string;
+    firstName: string;
+    secondName: string;
     status?: string; // "ACTIVO" | "INACTIVO"
-    last_name?: string;
-    second_last_name?: string;
+    lastName?: string;
+    secondLastName?: string;
     salary?: number; 
     isAdmin?: boolean;
     createdAt?: string; 

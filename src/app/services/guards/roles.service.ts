@@ -7,22 +7,38 @@ import { TokenService } from '../token.service';
 })
 export class RolesService {
 
-  realRole: string = "";
+  realRole: boolean = false;
 
   constructor(private tokenService: TokenService, private router: Router) { }
 
   canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
+    const expectedRoles: string[] = next.data["roles"] || [];
 
-    const expectedRole: string[] = next.data["expectedRole"];
-    this.realRole = this.tokenService.getRol();
+    this.realRole = this.tokenService.getIsAdmin();
 
-    if (!this.tokenService.isLogged() 
-      // || !expectedRole.some(r => this.realRole.includes(r))
-    ) {
+    // Si no está logueado, lo sacamos
+    if (!this.tokenService.isLogged()) {
       this.router.navigate(["/login"]);
       return false;
     }
 
+    // Si no hay roles requeridos, lo dejamos pasar
+    if (expectedRoles.length === 0) {
+      return true;
+    }
+
+    // Si requiere ADMIN y el usuario es admin, lo dejamos pasar
+    if (expectedRoles.includes('ADMIN') && this.realRole) {
+      return true;
+    }
+
+    // Si requiere ADMIN y no es admin, lo sacamos
+    if (expectedRoles.includes('ADMIN') && !this.realRole) {
+      this.router.navigate(["/administrador"]);
+      return false;
+    }
+
+    // Si los roles requeridos NO incluyen ADMIN, dejar pasar
     return true;
   }
 
