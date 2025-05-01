@@ -1,5 +1,7 @@
 export interface UpdateUserCommandDto {
+    id: number;
     typeDocument: string;
+    documentNumber: string;
     phone: string;
     position: string;
     salary: number;
@@ -10,5 +12,6 @@ export interface UpdateUserCommandDto {
     email: string;
     password?: string;
     status: string;
+    isAdmin: number;
     updatedAt: string;
 }

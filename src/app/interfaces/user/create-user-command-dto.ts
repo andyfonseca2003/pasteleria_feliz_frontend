@@ -1,4 +1,5 @@
 export interface CreateUserCommandDto {
+    id: number,
     typeDocument: string;
     documentNumber: string;
     phone: string;

@@ -1,0 +1,139 @@
+<div class="container-fluid row mx-auto">
+    <app-aside class="p-0 m-0 col-2"></app-aside>
+    <div class="col-10 main-content position-relative max-height-vh-100 h-100 border-radius-lg ">
+      <div class="container-fluid py-2">
+        <div class="row">
+          <div class="col-12">
+            <div class="card my-4">
+              <div class="top-header card-header p-0 position-relative mt-n4 mx-3 z-index-2 border-radius rounded bg-dark">
+                <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
+                  <h6 class="text-white text-capitalize ps-3">Editar Usuario</h6>
+                </div>
+              </div>
+  
+              <!-- Indicador de carga -->
+              <div *ngIf="isLoading" class="d-flex justify-content-center my-3">
+                <div class="spinner-border text-primary" role="status">
+                  <span class="visually-hidden">Cargando...</span>
+                </div>
+              </div>
+  
+              <div class="card-body px-4 pb-2">
+                <form [formGroup]="userForm" (ngSubmit)="onSubmit()">
+                  <div class="row">
+                    <!-- Documento -->
+                    <div class="col-md-6 mb-3">
+                      <label for="tipoDocumento" class="form-label">Tipo de Documento *</label>
+                      <select id="tipoDocumento" class="form-select" formControlName="typeDocument">
+                        <option value="" disabled>Seleccione tipo de documento</option>
+                        <option *ngFor="let tipo of tiposDocumento" [value]="tipo">{{tipo}}</option>
+                      </select>
+                      <div *ngIf="userForm.get('typeDocument')?.invalid && userForm.get('typeDocument')?.touched" class="text-danger">
+                        Tipo de documento es requerido
+                      </div>
+                    </div>
+  
+                    <div class="col-md-6 mb-3">
+                      <label for="documentNumber" class="form-label">Número de Documento *</label>
+                      <input type="text" id="documentNumber" class="form-control" formControlName="documentNumber" placeholder="Ingrese número de documento">
+                      <div *ngIf="userForm.get('documentNumber')?.invalid && userForm.get('documentNumber')?.touched" class="text-danger">
+                        Número de documento es requerido
+                      </div>
+                    </div>
+  
+                    <!-- Información personal -->
+                    <div class="col-md-6 mb-3">
+                      <label for="firstName" class="form-label">Primer Nombre *</label>
+                      <input type="text" id="firstName" class="form-control" formControlName="firstName" placeholder="Ingrese primer nombre">
+                      <div *ngIf="userForm.get('firstName')?.invalid && userForm.get('firstName')?.touched" class="text-danger">
+                        Primer nombre es requerido
+                      </div>
+                    </div>
+  
+                    <div class="col-md-6 mb-3">
+                      <label for="secondName" class="form-label">Segundo Nombre</label>
+                      <input type="text" id="secondName" class="form-control" formControlName="secondName" placeholder="Ingrese segundo nombre (opcional)">
+                    </div>
+  
+                    <div class="col-md-6 mb-3">
+                      <label for="lastName" class="form-label">Primer Apellido *</label>
+                      <input type="text" id="lastName" class="form-control" formControlName="lastName" placeholder="Ingrese primer apellido">
+                      <div *ngIf="userForm.get('lastName')?.invalid && userForm.get('lastName')?.touched" class="text-danger">
+                        Primer apellido es requerido
+                      </div>
+                    </div>
+  
+                    <div class="col-md-6 mb-3">
+                      <label for="secondLastName" class="form-label">Segundo Apellido</label>
+                      <input type="text" id="secondLastName" class="form-control" formControlName="secondLastName" placeholder="Ingrese segundo apellido (opcional)">
+                    </div>
+  
+                    <!-- Contacto -->
+                    <div class="col-md-6 mb-3">
+                      <label for="email" class="form-label">Email *</label>
+                      <input type="email" id="email" class="form-control" formControlName="email" placeholder="ejemplo@correo.com">
+                      <div *ngIf="userForm.get('email')?.invalid && userForm.get('email')?.touched" class="text-danger">
+                        <span *ngIf="userForm.get('email')?.errors?.['required']">Email es requerido</span>
+                        <span *ngIf="userForm.get('email')?.errors?.['email']">Debe ingresar un email válido</span>
+                      </div>
+                    </div>
+  
+                    <div class="col-md-6 mb-3">
+                      <label for="phone" class="form-label">Teléfono *</label>
+                      <input type="tel" id="phone" class="form-control" formControlName="phone" placeholder="Ingrese número de teléfono">
+                      <div *ngIf="userForm.get('phone')?.invalid && userForm.get('phone')?.touched" class="text-danger">
+                        Teléfono es requerido
+                      </div>
+                    </div>
+  
+                    <!-- Información laboral -->
+                    <div class="col-md-6 mb-3">
+                      <label for="position" class="form-label">Cargo</label>
+                      <input type="text" id="position" class="form-control" formControlName="position" placeholder="Ingrese cargo (opcional)">
+                    </div>
+  
+                    <div class="col-md-6 mb-3">
+                      <label for="salary" class="form-label">Salario</label>
+                      <input type="number" id="salary" class="form-control" formControlName="salary" placeholder="Ingrese salario (opcional)">
+                    </div>
+  
+                    <!-- Seguridad -->
+                    <div class="col-md-6 mb-3">
+                      <label for="password" class="form-label">Contraseña</label>
+                      <input type="password" id="password" class="form-control" formControlName="password" placeholder="Dejar en blanco para no cambiar">
+                      <small class="form-text text-muted">Dejar en blanco para mantener la contraseña actual</small>
+                    </div>
+  
+                    <div class="col-md-6 mb-3">
+                      <label for="status" class="form-label">Estado *</label>
+                      <select id="status" class="form-select" formControlName="status">
+                        <option *ngFor="let estado of estados" [value]="estado">{{estado}}</option>
+                      </select>
+                    </div>
+  
+                    <!-- Permisos -->
+                    <div class="col-md-6 mb-3">
+                      <div class="form-check form-switch mt-4">
+                        <input class="form-check-input" type="checkbox" id="isAdmin" formControlName="isAdmin">
+                        <label class="form-check-label" for="isAdmin">¿Es administrador?</label>
+                      </div>
+                    </div>
+                  </div>
+  
+                  <!-- Botones de acción -->
+                  <div class="d-flex justify-content-end mt-4">
+                    <button type="button" class="btn btn-outline-secondary me-2" (click)="cancelar()">
+                      <i class="bi bi-x-circle me-1"></i>Cancelar
+                    </button>
+                    <button type="submit" class="btn btn-primary" [disabled]="userForm.invalid || isLoading">
+                      <i class="bi bi-save me-1"></i>Guardar Cambios
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
