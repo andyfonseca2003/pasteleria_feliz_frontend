@@ -1,5 +1,5 @@
 export interface UserBackendResponse {
-
+    id: number;
     documentNumber?: number;  // Optional for creation
     typeDocument?: string; // Added from backend
     phone: string;  

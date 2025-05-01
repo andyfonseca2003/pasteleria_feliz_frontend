@@ -15,6 +15,7 @@ import { ListarSuppliersComponent } from './components/listar-suppliers/listar-s
 import { CrearSupplierComponent } from './components/crear-supplier/crear-supplier.component';
 import { EditarSupplierComponent } from './components/editar-supplier/editar-supplier.component';
 import { ListarUsuariosComponent } from './components/listar-usuarios/listar-usuarios.component';
+import { EditarUsuarioComponent } from './components/editar-usuario/editar-usuario.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [LoginGuard] },
@@ -58,6 +59,7 @@ export const routes: Routes = [
   // Ruta para users
   { path: 'registro', component: RegistroComponent, canActivate: [RolesGuard], },
   { path: 'listar-usuarios', component: ListarUsuariosComponent, canActivate: [RolesGuard], },
+  { path: 'editar-usuarios/:id', component: EditarUsuarioComponent, canActivate: [RolesGuard], },
 
 
   { path: "**", pathMatch: "full", redirectTo: "login" },
