@@ -1,0 +1,181 @@
+<div class="container-fluid row mx-auto">
+  <app-aside class="p-0 m-0 col-2"></app-aside>
+  <div class="col-10 main-content position-relative max-height-vh-100 h-100 border-radius-lg">
+    <div class="card col-12 my-4 mx-auto">
+      <div class="top-header card-header p-0 position-relative mt-n4 mx-3 z-index-2 border-radius rounded bg-dark">
+        <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
+          <h6 class="text-white text-capitalize ps-3">Nueva Orden de Pastel</h6>
+        </div>
+      </div>
+      <div class="card-body">
+        <form [formGroup]="orderForm" (ngSubmit)="crearOrden()">
+          <div class="row">
+            <div class="col-md-6">
+              <h5 class="mb-3">Información del Cliente</h5>
+              
+              <div class="mb-3">
+                <label class="form-label">Nombre del Cliente*</label>
+                <input type="text" class="form-control" formControlName="customerName">
+                <div *ngIf="orderForm.get('customerName')?.invalid && orderForm.get('customerName')?.touched" class="text-danger small">
+                  El nombre del cliente es obligatorio
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label class="form-label">Teléfono*</label>
+                <input type="text" class="form-control" formControlName="customerPhone">
+                <div *ngIf="orderForm.get('customerPhone')?.invalid && orderForm.get('customerPhone')?.touched" class="text-danger small">
+                  El teléfono es obligatorio
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label class="form-label">Email</label>
+                <input type="email" class="form-control" formControlName="customerEmail">
+                <div *ngIf="orderForm.get('customerEmail')?.invalid && orderForm.get('customerEmail')?.touched" class="text-danger small">
+                  Por favor ingrese un email válido
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label class="form-label">Fecha de Entrega*</label>
+                <input type="datetime-local" class="form-control" formControlName="deliveryDate" [min]="minDeliveryDateTime">
+                <div *ngIf="orderForm.get('deliveryDate')?.invalid && orderForm.get('deliveryDate')?.touched" class="text-danger small">
+                  La fecha de entrega es obligatoria y debe ser futura
+                </div>
+              </div>
+              
+              <div class="mb-3">
+                <label class="form-label">Estado Inicial</label>
+                <select class="form-select" formControlName="orderStatus">
+                  <option value="PENDIENTE">Pendiente</option>
+                  <option value="CONFIRMADA">Confirmada</option>
+                </select>
+              </div>
+            </div>
+            
+            <div class="col-md-6">
+              <h5 class="mb-3">Detalles del Pedido</h5>
+              
+              <div formArrayName="orderDetails">
+                @for (detailControl of getOrderDetailsControls(); let i = $index; track i) {
+                <div [formGroupName]="i" class="border rounded p-3 mb-3 position-relative">
+                  <button type="button" class="btn btn-sm btn-danger position-absolute top-0 end-0 mt-2 me-2"
+                    (click)="removeOrderDetail(i)" *ngIf="getOrderDetailsControls().length > 1">
+                    <i class="bi bi-x-lg"></i>
+                  </button>
+                  
+                  <div class="mb-3">
+                    <label class="form-label">Receta*</label>
+                    <ng-select [items]="recetas" bindLabel="name" bindValue="id" 
+                      formControlName="recipeId" placeholder="Seleccione una receta"
+                      [searchable]="true" (change)="onRecipeChange($event, i)">
+                    </ng-select>
+                    <div *ngIf="detailControl.get('recipeId')?.invalid && detailControl.get('recipeId')?.touched" 
+                      class="text-danger small">
+                      Debe seleccionar una receta
+                    </div>
+                  </div>
+                  
+                  <div class="mb-3">
+                    <label class="form-label">Cantidad*</label>
+                    <input type="number" class="form-control" formControlName="quantity" min="1"
+                      (change)="calculateSubtotal(i)">
+                    <div *ngIf="detailControl.get('quantity')?.invalid && detailControl.get('quantity')?.touched" 
+                      class="text-danger small">
+                      La cantidad debe ser al menos 1
+                    </div>
+                  </div>
+                  
+                  <div class="mb-3">
+                    <label class="form-label">Precio Unitario*</label>
+                    <input type="number" class="form-control" formControlName="unitPrice" 
+                      (change)="calculateSubtotal(i)">
+                    <div *ngIf="detailControl.get('unitPrice')?.invalid && detailControl.get('unitPrice')?.touched" 
+                      class="text-danger small">
+                      El precio unitario debe ser mayor a 0
+                    </div>
+                  </div>
+                  
+                  <div class="mb-3">
+                    <label class="form-label">Subtotal</label>
+                    <input type="text" class="form-control" [value]="calculateSubtotalDisplay(i)" disabled>
+                  </div>
+                  
+                  <div class="mb-3">
+                    <label class="form-label">Instrucciones Especiales</label>
+                    <textarea class="form-control" formControlName="specialInstructions" rows="2"></textarea>
+                  </div>
+                </div>
+                }
+                
+                <div class="text-center mb-4">
+                  <button type="button" class="btn btn-outline-primary" (click)="addOrderDetail()">
+                    <i class="bi bi-plus-circle me-1"></i> Agregar Otro Pastel
+                  </button>
+                </div>
+                
+                <div class="alert alert-info" *ngIf="inventoryCheck && inventoryCheck.hasInventoryAlert">
+                  <h6 class="alert-heading"><i class="bi bi-exclamation-triangle-fill me-2"></i>Alerta de Inventario</h6>
+                  <p class="mb-0">{{ inventoryCheck.alertMessage }}</p>
+                  <hr>
+                  <div class="table-responsive" *ngIf="inventoryCheck.alertDetails && inventoryCheck.alertDetails.length > 0">
+                    <table class="table table-sm table-bordered">
+                      <thead>
+                        <tr>
+                          <th>Insumo</th>
+                          <th>Requerido</th>
+                          <th>Disponible</th>
+                          <th>Estado</th>
+                        </tr>
+                      </thead>
+                      <tbody>
+                        @for (detail of inventoryCheck.alertDetails; track $index) {
+                        <tr>
+                          <td>{{ detail.supplyName }}</td>
+                          <td>{{ detail.requiredQuantity }}</td>
+                          <td>{{ detail.availableQuantity }}</td>
+                          <td [ngClass]="detail.outOfStock ? 'text-danger fw-bold' : 'text-warning'">
+                            {{ detail.outOfStock ? 'SIN STOCK' : 'BAJO MÍNIMO' }}
+                          </td>
+                        </tr>
+                        }
+                      </tbody>
+                    </table>
+                  </div>
+                </div>
+                
+                <div class="d-flex justify-content-between align-items-center mt-4">
+                  <div>
+                    <button type="button" class="btn btn-info me-2" (click)="verificarInventario()">
+                      <i class="bi bi-check-circle me-1"></i> Verificar Inventario
+                    </button>
+                  </div>
+                  <div class="text-end">
+                    <h5>Total: <span class="text-primary">{{ calculateTotalAmount() | currency:'COP ':'symbol':'1.0-0' }}</span></h5>
+                  </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
+          <div class="row g-0 col-12 text-end justify-content-end mt-4">
+            <div class="mb-3 mx-1 col-auto">
+              <button type="button" (click)="regresar()" class="btn btn-secondary">Cancelar</button>
+            </div>
+            <div class="mb-3 mx-1 col-auto">
+              <button type="button" (click)="verificarInventario()" class="btn btn-info">
+                <i class="bi bi-check-circle me-1"></i> Verificar Inventario
+              </button>
+            </div>
+            <div class="mb-3 mx-1 col-auto">
+              <button type="submit" [disabled]="orderForm.invalid" class="btn btn-success">
+                <i class="bi bi-save me-1"></i> Guardar Orden
+              </button>
+            </div>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</div>

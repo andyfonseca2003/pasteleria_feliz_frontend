@@ -16,6 +16,9 @@ import { CrearSupplierComponent } from './components/crear-supplier/crear-suppli
 import { EditarSupplierComponent } from './components/editar-supplier/editar-supplier.component';
 import { ListarUsuariosComponent } from './components/listar-usuarios/listar-usuarios.component';
 import { EditarUsuarioComponent } from './components/editar-usuario/editar-usuario.component';
+import { EditarCakeOrderComponent } from './components/editar-cake-orders/editar-cake-orders.component';
+import { ListarCakeOrdersComponent } from './components/listar-cake-orders/listar-cake-orders.component';
+import { CrearCakeOrderComponent } from './components/crear-cake-orders/crear-cake-orders.component';
 
 export const routes: Routes = [
   { path: 'login', component: LoginComponent, canActivate: [LoginGuard] },
@@ -54,6 +57,15 @@ export const routes: Routes = [
   {
     path: 'editar-suppliers/:id', component: EditarSupplierComponent, canActivate: [RolesGuard],
     // data: { expectedRole: ["ADMINISTRADOR"] }
+  },
+  {
+    path: 'listar-ordenes', component: ListarCakeOrdersComponent, canActivate: [RolesGuard]
+  },
+  {
+    path: 'crear-orden', component: CrearCakeOrderComponent, canActivate: [RolesGuard]
+  },
+  {
+    path: 'editar-orden/:id', component: EditarCakeOrderComponent, canActivate: [RolesGuard]
   },
 
   // Ruta para users

@@ -1,0 +1,204 @@
+<div class="container-fluid row mx-auto">
+  <app-aside class="p-0 m-0 col-2"></app-aside>
+  <div class="col-10 main-content position-relative max-height-vh-100 h-100 border-radius-lg">
+    <div class="container-fluid py-2">
+      <div class="row">
+        <div class="col-12">
+          <div class="card my-4">
+            <div
+              class="top-header card-header p-0 position-relative mt-n4 mx-3 z-index-2 border-radius rounded bg-dark">
+              <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
+                <h6 class="text-white text-capitalize ps-3">Órdenes de Pasteles</h6>
+              </div>
+            </div>
+            
+            <!-- Barra de búsqueda y filtros -->
+            <div class="search-and-filters row mx-0 mt-3 mb-2 px-3">
+              <div class="col-md-6">
+                <div class="input-group">
+                  <input
+                    type="text"
+                    class="form-control"
+                    placeholder="Buscar por cliente, ID o estado..."
+                    [(ngModel)]="searchTerm"
+                    (keyup.enter)="onSearch()"
+                  >
+                  <button class="btn btn-outline-primary" type="button" (click)="onSearch()">
+                    <i class="bi bi-search"></i>
+                  </button>
+                  <button class="btn btn-outline-secondary" type="button" (click)="clearSearch()">
+                    <i class="bi bi-x-lg"></i>
+                  </button>
+                </div>
+              </div>
+              <div class="col-md-6 text-end">
+                <a [routerLink]="['/crear-orden']" class="btn btn-primary">
+                  <i class="bi bi-plus-circle"></i>
+                  Nueva Orden
+                </a>
+              </div>
+            </div>
+            
+            <!-- Indicador de carga -->
+            <div *ngIf="isLoading" class="d-flex justify-content-center my-3">
+              <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Cargando...</span>
+              </div>
+            </div>
+            
+            <div class="card-body px-0 pb-2">
+              <div class="table-responsive p-0">
+                <table class="table align-items-center mb-0">
+                  <thead>
+                    <tr>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-4 sortable-header" 
+                          (click)="sortBy('id')">
+                        ID
+                        <i [ngClass]="getSortIcon('id')" class="ms-1"></i>
+                      </th>
+                      <th class="text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 ps-2 sortable-header" 
+                          (click)="sortBy('customerName')">
+                        Cliente
+                        <i [ngClass]="getSortIcon('customerName')" class="ms-1"></i>
+                      </th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 sortable-header"
+                          (click)="sortBy('orderDate')">
+                        Fecha de Pedido
+                        <i [ngClass]="getSortIcon('orderDate')" class="ms-1"></i>
+                      </th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 sortable-header"
+                          (click)="sortBy('deliveryDate')">
+                        Fecha de Entrega
+                        <i [ngClass]="getSortIcon('deliveryDate')" class="ms-1"></i>
+                      </th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 sortable-header"
+                          (click)="sortBy('orderStatus')">
+                        Estado
+                        <i [ngClass]="getSortIcon('orderStatus')" class="ms-1"></i>
+                      </th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7 sortable-header"
+                          (click)="sortBy('totalAmount')">
+                        Total
+                        <i [ngClass]="getSortIcon('totalAmount')" class="ms-1"></i>
+                      </th>
+                      <th class="text-center text-uppercase text-secondary text-xxs font-weight-bolder opacity-7">
+                        Acciones</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <!-- Mensaje cuando no hay resultados -->
+                    <tr *ngIf="filteredOrdenes.length === 0 && !isLoading">
+                      <td colspan="7" class="text-center py-4">
+                        <i class="bi bi-search fs-3 text-muted mb-2 d-block"></i>
+                        <p class="mb-0">No se encontraron órdenes que coincidan con tu búsqueda</p>
+                        <button class="btn btn-sm btn-outline-primary mt-2" (click)="clearSearch()">
+                          Limpiar búsqueda
+                        </button>
+                      </td>
+                    </tr>
+                    
+                    <!-- Resultados de la tabla -->
+                    @for (orden of filteredOrdenes; track $index) {
+                    <tr>
+                      <td>
+                        <div class="d-flex px-2 py-1">
+                          <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm">{{orden.id}}</h6>
+                          </div>
+                        </div>
+                      </td>
+                      <td>
+                        <div class="d-flex px-2 py-1">
+                          <div class="d-flex flex-column justify-content-center">
+                            <h6 class="mb-0 text-sm">{{orden.customerName}}</h6>
+                            <p class="text-xs text-secondary mb-0">{{orden.customerPhone}}</p>
+                          </div>
+                        </div>
+                      </td>
+                      <td class="align-middle text-center">
+                        <span class="text-secondary text-xs font-weight-bold">{{formatDate(orden.orderDate)}}</span>
+                      </td>
+                      <td class="align-middle text-center">
+                        <span class="text-secondary text-xs font-weight-bold">{{formatDate(orden.deliveryDate)}}</span>
+                      </td>
+                      <td class="align-middle text-center">
+                        <span class="badge" [ngClass]="getStatusClass(orden.orderStatus)">
+                          {{getStatusText(orden.orderStatus)}}
+                        </span>
+                        <i *ngIf="orden.hasInventoryAlert" class="bi bi-exclamation-triangle-fill text-warning ms-2" 
+                           title="Alerta de inventario"></i>
+                      </td>
+                      <td class="align-middle text-center">
+                        <span class="text-secondary text-xs font-weight-bold">
+                          {{orden.totalAmount | currency:'COP ':'symbol':'1.0-0'}}
+                        </span>
+                      </td>
+                      <td class="align-middle text-center">
+                        <div class="btn-group btn-group-sm" role="group">
+                          <button class="btn btn-info btn-sm" (click)="showDetailModal(orden)" title="Ver detalles">
+                            <i class="bi bi-info-circle"></i>
+                          </button>
+
+                          <button class="btn btn-secondary btn-sm" (click)="openEditarOrden(orden.id)"
+                            title="Editar orden">
+                            <i class="bi bi-pencil"></i>
+                          </button>
+
+                          <button (click)="eliminarOrden(orden.id)" class="btn btn-danger btn-sm" 
+                            [disabled]="!canDelete(orden.orderStatus)"
+                            title="Cancelar orden">
+                            <i class="bi bi-trash"></i>
+                          </button>
+
+                          <button class="btn btn-primary btn-sm" (click)="updateStatus(orden)"
+                            title="Actualizar estado">
+                            <i class="bi bi-arrow-clockwise"></i>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                    }
+                  </tbody>
+                </table>
+                <!-- Paginador -->
+                <div class="pagination-container d-flex justify-content-center mt-4">
+                  <nav aria-label="Navegación de órdenes">
+                    <ul class="pagination">
+                      <li class="page-item" [class.disabled]="currentPage === 0">
+                        <button class="page-link" (click)="goToPreviousPage()" aria-label="Anterior">
+                          <i class="bi bi-chevron-left"></i>
+                        </button>
+                      </li>
+
+                      <!-- Mostrar hasta 5 páginas (la actual y 2 antes/después) -->
+                      @for (pageIdx of getPaginationRange(); track pageIdx) {
+                      <li class="page-item" [class.active]="pageIdx === currentPage">
+                        <button class="page-link" (click)="goToPage(pageIdx)">{{ pageIdx + 1 }}</button>
+                      </li>
+                      }
+
+                      <li class="page-item" [class.disabled]="currentPage === totalPages - 1">
+                        <button class="page-link" (click)="goToNextPage()" aria-label="Siguiente">
+                          <i class="bi bi-chevron-right"></i>
+                        </button>
+                      </li>
+                    </ul>
+                  </nav>
+                </div>
+
+                <!-- Información de paginación -->
+                <div class="text-center mt-3">
+                  <span class="pagination-info">
+                    <i class="bi bi-file-earmark-text me-1"></i>
+                    Mostrando {{ ordenes.length }} de {{ totalItems }} órdenes |
+                    Página {{ currentPage + 1 }} de {{ totalPages }}
+                  </span>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
