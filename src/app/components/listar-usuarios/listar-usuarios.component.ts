@@ -3,12 +3,14 @@ import { Router, RouterLink } from '@angular/router';
 import { Location } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
-import { AdministradorService } from '../../services/administrador.service';
 import { AsideComponent } from '../shared/aside/aside.component';
 import Swal, { SweetAlertResult } from 'sweetalert2';
 import { UserService } from '../../services/user.service';
 import { UserBackendResponse } from '../../interfaces/user/user-backend-response';
 import { UserSimplifyResponseDto } from '../../interfaces/user/user-simplify-response-dto';
+import { CreateUserCommandDto } from '../../interfaces/user/create-user-command-dto';
+import { Status } from '../../interfaces/user/status.enum';
+import { TypeDocument } from '../../interfaces/user/type-document.enum';
 
 @Component({
   selector: 'app-listar-usuarios',
@@ -20,7 +22,6 @@ import { UserSimplifyResponseDto } from '../../interfaces/user/user-simplify-res
     CommonModule
   ],
   templateUrl: './listar-usuarios.component.html',
-  providers: [AdministradorService],
   styleUrl: './listar-usuarios.component.css'
 })
 export class ListarUsuariosComponent {
@@ -237,7 +238,7 @@ export class ListarUsuariosComponent {
             console.error('Error al eliminar usuario:', error);
             Swal.fire({
               title: 'Error',
-              text: error.error?.data || 'No se pudo eliminar el proveedor',
+              text: error.error?.data || 'No se pudo eliminar el usuario',
               icon: 'error',
               confirmButtonText: 'Aceptar',
               confirmButtonColor: '#8b0000',
@@ -248,7 +249,7 @@ export class ListarUsuariosComponent {
     });
   }
 
-  // Método para editar un proveedor
+  // Método para editar un usuario
   public openEditarUser(id: number | undefined) {
     if (id) {
       this.router.navigate(['/editar-usuarios', id]);
@@ -267,7 +268,7 @@ export class ListarUsuariosComponent {
     this.location.back();
   }
 
-  // Agrega la función para formatear el nombre del usuario si no existe
+  // Formatea el nombre del usuario
   private formatearNombreUsuario(userData: UserSimplifyResponseDto): string {
     const typeDoc = userData.typeDocument || '';
     const docNum = userData.documentNumber || '';
@@ -294,5 +295,108 @@ export class ListarUsuariosComponent {
 
   isColumnSorted(field: string): boolean {
     return this.sortField === field;
+  }
+
+  showReviewModal(user: UserBackendResponse) {
+    // No aplica para usuarios, mostramos información relevante
+    Swal.fire({
+      title: `Información de ${user.first_name} ${user.last_name}`,
+      html: `
+        <div class="user-info-container p-4 bg-light border">
+          <div class="d-flex align-items-center mb-3">
+            <i class="bi bi-person-circle fs-3 me-2 text-primary"></i>
+            <h5 class="mb-0 text-primary">Detalles del Usuario</h5>
+          </div>
+          
+          <div class="user-details">
+            <p><strong>Documento:</strong> ${user.typeDocument} ${user.documentNumber}</p>
+            <p><strong>Nombre completo:</strong> ${user.first_name} ${user.second_name || ''} ${user.last_name} ${user.second_last_name || ''}</p>
+            <p><strong>Email:</strong> ${user.email}</p>
+            <p><strong>Teléfono:</strong> ${user.phone}</p>
+            ${user.position ? `<p><strong>Cargo:</strong> ${user.position}</p>` : ''}
+            ${user.salary ? `<p><strong>Salario:</strong> $${user.salary.toLocaleString()}</p>` : ''}
+            ${user.status ? `<p><strong>Estado:</strong> ${user.status}</p>` : ''}
+            ${user.isAdmin !== undefined ? `<p><strong>Administrador:</strong> ${user.isAdmin ? 'Sí' : 'No'}</p>` : ''}
+          </div>
+        </div>
+      `,
+      width: 600,
+      confirmButtonText: 'Cerrar',
+      customClass: {
+        container: 'user-info-modal'
+      }
+    });
+  }
+
+  // Método para mostrar información detallada
+  showInfoModal(user: UserBackendResponse) {
+    // Preparamos las fechas formateadas
+    const createdAtFormatted = this.formatearFecha(user.createdAt || '');
+    const updatedAtFormatted = this.formatearFecha(user.updatedAt || '');
+
+    Swal.fire({
+      title: 'Información Adicional',
+      html: `
+        <div class="user-info-container p-4 bg-light border">
+          <div class="d-flex align-items-center mb-3">
+            <i class="bi bi-info-circle fs-3 me-2 text-info"></i>
+            <h5 class="mb-0 text-info">Metadatos</h5>
+          </div>
+          
+          <div class="user-details">
+            <p><strong>ID:</strong> ${user.id}</p>
+            <p><strong>Fecha de creación:</strong> ${createdAtFormatted}</p>
+            <p><strong>Fecha de actualización:</strong> ${updatedAtFormatted}</p>
+            <p><strong>Estado:</strong> ${user.status || 'No disponible'}</p>
+          </div>
+        </div>
+      `,
+      icon: 'info',
+      confirmButtonText: 'Cerrar'
+    });
+  }
+
+  // Formateador de fechas para mostrar fecha y hora
+  private formatearFecha(fechaStr: string): string {
+    if (!fechaStr) return 'No disponible';
+
+    try {
+      const fecha = new Date(fechaStr);
+
+      const opciones: Intl.DateTimeFormatOptions = {
+        day: '2-digit',
+        month: '2-digit',
+        year: 'numeric',
+        hour: '2-digit',
+        minute: '2-digit',
+        hour12: true
+      };
+
+      return fecha.toLocaleDateString('es-ES', opciones);
+    } catch (error) {
+      console.error('Error al formatear la fecha:', error);
+      return fechaStr || 'No disponible';
+    }
+  }
+
+  // Método para formatear fecha más amigable (día, mes, año)
+  private obtenerSoloDia(fechaStr: string): string {
+    if (!fechaStr) return 'No disponible';
+
+    try {
+      const fecha = new Date(fechaStr);
+
+      const opciones: Intl.DateTimeFormatOptions = {
+        weekday: 'long',
+        day: 'numeric',
+        month: 'long',
+        year: 'numeric'
+      };
+
+      return fecha.toLocaleDateString('es-ES', opciones);
+    } catch (error) {
+      console.error('Error al formatear la fecha:', error);
+      return 'No disponible';
+    }
   }
 }

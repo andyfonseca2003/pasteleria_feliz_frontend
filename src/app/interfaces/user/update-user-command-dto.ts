@@ -11,5 +11,6 @@ export interface UpdateUserCommandDto {
     secondLastName: string;
     email: string;
     status: string;
+    isAdmin: number;
     updatedAt: string;
 }
