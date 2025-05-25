@@ -9,7 +9,7 @@ import { recuperarDTO } from '../../interfaces/Cuenta/recuperar-cuenta-dto';
 
 
 @Injectable({
- providedIn: 'root'
+  providedIn: 'root'
 })
 
 export class AuthService {
@@ -20,26 +20,22 @@ export class AuthService {
 
   public crearCuenta(cuentaDTO: CrearCuentaDTO): Observable<MensajeDTO> {
     return this.http.post<MensajeDTO>(`${this.authURL}/crear-cuenta`, cuentaDTO);
-   }
-      
-   public iniciarSesion(loginDTO: LoginDTO): Observable<MensajeDTO> {
-    return this.http.post<MensajeDTO>(`${this.authURL}/login`, loginDTO);
-   }
-
-   public activarCuenta(activarCuenta: ActivarCuentaDTO): Observable<MensajeDTO> {
-    return this.http.post<MensajeDTO>(`${this.authURL}/activar-cuenta`, activarCuenta);
-   }
-
-   public refreshToken(activarCuenta: ActivarCuentaDTO): Observable<MensajeDTO> {
-    return this.http.post<MensajeDTO>(`${this.authURL}/activar-cuenta`, activarCuenta);
-   }
-
-   public recuperarContrasena(email: string): Observable<MensajeDTO> {
-    // Creamos los parámetros de consulta
-    const params = new HttpParams().set('email', email);
-
-    // Realizamos la petición POST enviando el email como parámetro de consulta
-    return this.http.post<MensajeDTO>(`${this.authURL}/recuperar-contrasena`, null, { params });
   }
-  
+
+  public iniciarSesion(loginDTO: LoginDTO): Observable<MensajeDTO> {
+    return this.http.post<MensajeDTO>(`${this.authURL}/login`, loginDTO);
+  }
+
+  public activarCuenta(activarCuenta: ActivarCuentaDTO): Observable<MensajeDTO> {
+    return this.http.post<MensajeDTO>(`${this.authURL}/recuperar-contrasena`, activarCuenta);
+  }
+
+  public refreshToken(activarCuenta: ActivarCuentaDTO): Observable<MensajeDTO> {
+    return this.http.post<MensajeDTO>(`${this.authURL}/activar-cuenta`, activarCuenta);
+  }
+
+  public enviarCodigo(email: string): Observable<MensajeDTO> {
+    const requestBody = { email: email }; // Crear objeto con la propiedad email
+    return this.http.post<MensajeDTO>(`${this.authURL}/enviar-codigo`, requestBody);
+  }
 }

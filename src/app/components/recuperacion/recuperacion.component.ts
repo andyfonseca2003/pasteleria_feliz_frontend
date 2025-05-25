@@ -20,7 +20,7 @@ export class RecuperacionComponent {
 
   constructor(private formBuilder: FormBuilder, private location: Location,
     private authService: AuthService, private router: Router,
-  ) { 
+  ) {
     this.crearFormulario();
   }
 
@@ -28,13 +28,13 @@ export class RecuperacionComponent {
     this.recuperarCuenta = this.formBuilder.group({
       email: ['', [Validators.required, Validators.email]],
     },
-  );
+    );
   }
 
   public recuperarC() {
     const recuperarDTO = this.recuperarCuenta.value as { email: string };
     const email = recuperarDTO.email;
-  
+
     if (!email) {
       Swal.fire({
         icon: 'error',
@@ -43,21 +43,30 @@ export class RecuperacionComponent {
       });
       return;
     }
-  
-    this.authService.recuperarContrasena(email).subscribe({
+
+    this.authService.enviarCodigo(email).subscribe({
       next: (data) => {
         // Mostrar mensaje satisfactorio
-        Swal.fire({
-          icon: 'success',
-          title: 'Solicitud exitosa',
-          text: 'Se ha enviado un código de recuperación a tu correo. Por favor revisa tu bandeja de entrada.',
-          confirmButtonText: 'Ir a activar cuenta'
-        }).then((result) => {
-          if (result.isConfirmed) {
-            // Redirigir a la página de activar cuenta
-            this.router.navigate(['/activar-cuenta']);
-          }
-        });
+        if (data.error) {
+          Swal.fire({
+            icon: 'error',
+            title: 'Error',
+            text: data.respuesta || 'Ocurrió un error al enviar el código de recuperación',
+          });
+        } else {
+          Swal.fire({
+            icon: 'success',
+            title: 'Solicitud exitosa',
+            text: data.respuesta,
+            confirmButtonText: 'Ir a activar cuenta'
+          }).then((result) => {
+            if (result.isConfirmed) {
+              // Redirigir a la página de activar cuenta
+              this.router.navigate(['/activar-cuenta']);
+            }
+          });
+        }
+
       },
       error: (error) => {
         Swal.fire({
@@ -68,8 +77,8 @@ export class RecuperacionComponent {
       },
     });
   }
-  
-  
+
+
 
 
 
@@ -77,8 +86,8 @@ export class RecuperacionComponent {
     console.log(this.recuperarCuenta.value);
   }
 
-      // Método para regresar a la página anterior
-      regresar() {
-        this.location.back();
-      }
+  // Método para regresar a la página anterior
+  regresar() {
+    this.location.back();
+  }
 }

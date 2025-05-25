@@ -7,4 +7,5 @@ export interface EditarInsumoDTO {
     quantity: number,
     createdAt: string,
     updatedAt: string,
+    userModify: number
 }

@@ -7,6 +7,7 @@ import { AdministradorService } from '../../services/administrador.service';
 import Swal from 'sweetalert2';
 import { EditarInsumoDTO } from '../../interfaces/Insumo/editar-insumo-dto';
 import { AsideComponent } from '../shared/aside/aside.component';
+import { TokenService } from '../../services/token.service';
 
 @Component({
   selector: 'app-editar-insumos',
@@ -20,10 +21,13 @@ export class EditarInsumosComponent {
   tiposDeInsumo: any[] = [];    // Lista de tipos de insumos
   insumo: any = {}; // Para almacenar el insumo a editar
 
-  constructor(private formBuilder: FormBuilder, private location: Location,
+  constructor(
+    private formBuilder: FormBuilder,
+    private location: Location,
     private activatedRoute: ActivatedRoute,
     private adminService: AdministradorService,
-    private router: Router
+    private router: Router,
+    private tokenService: TokenService
   ) {
     this.crearFormulario();
 
@@ -47,8 +51,7 @@ export class EditarInsumosComponent {
           entryDate: this.insumo.entryDate,
           expirationDate: this.insumo.expirationDate,
           quantity: this.insumo.quantity,
-          minimumStock: this.insumo.minimumStock,
-          updatedAt: this.insumo.updatedAt
+          minimumStock: this.insumo.minimumStock
         });
       },
       error: (error) => {
@@ -93,7 +96,8 @@ export class EditarInsumosComponent {
       price: ['', [Validators.required]],
       quantity: ['', [Validators.required]],
       minimumStock: ['', [Validators.required]],
-      updatedAt: ['', [Validators.required]]
+      updatedAt: new Date().toISOString() ,
+      userModify: this.tokenService.getIDCuenta()
     });
   }
 

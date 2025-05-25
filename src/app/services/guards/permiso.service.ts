@@ -11,7 +11,7 @@ export class PermisoService {
 
   canActivate(next: ActivatedRouteSnapshot, state: RouterStateSnapshot): boolean {
     if (this.tokenService.isLogged()) {
-      this.router.navigate([""]);
+      this.router.navigate(["/administrador"]);
       return false;
     }
     return true;

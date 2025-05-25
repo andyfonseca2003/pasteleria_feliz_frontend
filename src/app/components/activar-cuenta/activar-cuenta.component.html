@@ -1,9 +1,9 @@
 <div class="card col-5 mx-auto">
     <div class="card-header">
-        Activar cuenta
+        Cambiar contraseña
     </div>
     <div class="card-body">
-        <h5 class="card-title text-center">Activa su cuenta</h5>
+        <h5 class="card-title text-center">Cambiar contraseña</h5>
         <form [formGroup]="cambioPassword" (ngSubmit)="cambiar()" novalidate="">
             <div class="mb-3 col-10 mx-auto">
                 <label for="exampleInputEmail1" class="form-label">Email:</label>
@@ -13,11 +13,11 @@
             <div class="mb-3 col-10 mx-auto">
                 <label for="exampleInputcodigo" class="form-label">Código:</label>
                 <input type="text" class="form-control" id="codigo" aria-describedby="codigoHelp"
-                    formControlName="codigo">
+                    formControlName="codigoVerificacion">
             </div>
             <div class="mb-3 col-10 mx-auto">
                 <label for="exampleInputPassword1" class="form-label">Contraseña nueva:</label>
-                <input type="password" class="form-control" id="password" formControlName="password">
+                <input type="password" class="form-control" id="password" formControlName="passwordNueva">
             </div>
             <div class="mb-3 col-10 mx-auto">
                 <label for="exampleInputPassword1" class="form-label">Confirmar contraseña:</label>
@@ -25,8 +25,7 @@
             </div>
             <div class="mb-3 d-flex justify-content-center gap-3">
                 <button (click)="regresar()" class="btn btn-secondary col-4">Cancelar</button>
-                <button type="submit" [disabled]="cambioPassword.invalid" class="btn btn-primary col-4">Activar
-                    cuenta</button>
+                <button type="submit" [disabled]="cambioPassword.invalid" class="btn btn-primary col-4">Cambiar contraseña</button>
             </div>
         </form>
     </div>

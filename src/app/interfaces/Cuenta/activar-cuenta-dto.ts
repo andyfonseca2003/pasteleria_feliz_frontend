@@ -1,6 +1,6 @@
 export interface ActivarCuentaDTO {
-    codigo: string,
+    codigoValidacion: string,
     email: string,
-    password: string
+    passwordNueva: string
  }
  

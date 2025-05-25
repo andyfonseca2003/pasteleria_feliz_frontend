@@ -12,7 +12,7 @@
           <div class="row mb-3">
             <div class="col-md-6">
               <label class="form-label" for="name">Nombre del Proveedor*</label>
-              <input type="text" class="form-control" formControlName="name" id="name">
+              <input type="text" class="form-control" formControlName="name" id="name"  (keypress)="onKeyPress($event, 'name')">
               <div *ngIf="supplierForm.get('name')?.invalid && supplierForm.get('name')?.touched" class="text-danger mt-1">
                 <small *ngIf="supplierForm.get('name')?.errors?.['required']">El nombre es requerido</small>
                 <small *ngIf="supplierForm.get('name')?.errors?.['minlength']">El nombre debe tener al menos 3
@@ -21,7 +21,7 @@
             </div>
             <div class="col-md-6">
                 <label class="form-label" for="contactPerson">Persona de Contacto*</label>
-                <input type="text" class="form-control" formControlName="contactPerson" id="contactPerson">
+                <input type="text" class="form-control" formControlName="contactPerson" id="contactPerson"  (keypress)="onKeyPress($event, 'name')">
               <div *ngIf="supplierForm.get('contactPerson')?.invalid && supplierForm.get('contactPerson')?.touched"
                 class="text-danger  mt-1">
                 <small *ngIf="supplierForm.get('contactPerson')?.errors?.['required']">La persona de contacto es
@@ -62,7 +62,7 @@
             </div>
 
             <div class="col-md-6">
-                <label class="form-label" for="taxId">NIT / RUT</label>
+                <label class="form-label" for="taxId">NIT / RUT*</label>
                 <input type="text" class="form-control" formControlName="taxId" id="taxId">
             </div>
           </div>

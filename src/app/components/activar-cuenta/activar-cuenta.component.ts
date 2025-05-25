@@ -27,9 +27,9 @@ export class ActivarCuentaComponent {
 
   private crearFormulario() {
     this.cambioPassword = this.formBuilder.group({
-      codigo: ['', [Validators.required]],
+      codigoVerificacion: ['', [Validators.required]],
       email: ['', [Validators.required, Validators.email]],
-      password: ['', [Validators.required, Validators.maxLength(10), Validators.minLength(7)]],
+      passwordNueva: ['', [Validators.required, Validators.maxLength(10), Validators.minLength(7)]],
       confirmarPassword: ['', [Validators.required, Validators.maxLength(10), Validators.minLength(7)]],
     },
       { validators: this.passwordsMatchValidator } as AbstractControlOptions
@@ -61,7 +61,7 @@ export class ActivarCuentaComponent {
   }
 
   passwordsMatchValidator(formGroup: FormGroup) {
-    const password = formGroup.get('password')?.value;
+    const password = formGroup.get('passwordNueva')?.value;
     const confirmaPassword = formGroup.get('confirmarPassword')?.value;
 
     // Si las contraseñas no coinciden, devuelve un error, de lo contrario, null

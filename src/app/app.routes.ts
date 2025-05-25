@@ -59,5 +59,7 @@ export const routes: Routes = [
   { path: 'registro', component: RegistroComponent, canActivate: [RolesGuard], data: { roles: ['ADMIN'] } },
   { path: 'listar-usuarios', component: ListarUsuariosComponent, canActivate: [RolesGuard], data: { roles: ['ADMIN'] } },
   { path: 'editar-usuarios/:id', component: EditarUsuariosComponent, canActivate: [RolesGuard], data: { roles: ['ADMIN'] } },
+  
+  { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: "**", pathMatch: "full", redirectTo: "login" },
 ];

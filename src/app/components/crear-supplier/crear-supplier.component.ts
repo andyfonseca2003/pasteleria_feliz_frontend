@@ -32,7 +32,7 @@ export class CrearSupplierComponent implements OnInit {
     private supplierService: SupplierService,
     private router: Router,
     private location: Location
-  ) {}
+  ) { }
 
   ngOnInit(): void {
     this.initForm();
@@ -40,12 +40,12 @@ export class CrearSupplierComponent implements OnInit {
 
   private initForm(): void {
     this.supplierForm = this.fb.group({
-      name: ['', [Validators.required, Validators.minLength(3)]],
+      name: ['', [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s']+$/)]],
       address: ['', Validators.required],
       phone: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
       email: ['', [Validators.required, Validators.email]],
-      contactPerson: ['', Validators.required],
-      
+      contactPerson: ['', [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s']+$/)]],
+
       taxId: [''],
       website: [''],
       notes: [''],
@@ -61,7 +61,7 @@ export class CrearSupplierComponent implements OnInit {
 
     this.supplierForm.get('hasReview')?.valueChanges.subscribe(hasReview => {
       this.showRatingFields = hasReview;
-      
+
       if (hasReview) {
         this.supplierForm.get('lastOrderDate')?.setValidators([Validators.required]);
         this.supplierForm.get('lastReviewRating')?.setValidators([Validators.required, Validators.min(0), Validators.max(5)]);
@@ -81,17 +81,17 @@ export class CrearSupplierComponent implements OnInit {
         const control = this.supplierForm.get(key);
         control?.markAsTouched();
       });
-      
+
       Swal.fire('Error', 'Por favor, complete todos los campos requeridos correctamente', 'error');
       return;
     }
-    
+
     const formData = this.supplierForm.value;
 
     if (formData.lastOrderDate) {
       formData.lastOrderDate = `${formData.lastOrderDate}T00:00:00`;
     }
-    
+
     const supplierData: any = {
       name: formData.name,
       supplierID: formData.taxId,
@@ -103,11 +103,11 @@ export class CrearSupplierComponent implements OnInit {
       createdAt: new Date().toISOString(),
       updatedAt: new Date().toISOString()
     };
-    
+
     if (formData.hasReview) {
-      supplierData.lastOrderDate = formData.lastOrderDate !== undefined ? 
+      supplierData.lastOrderDate = formData.lastOrderDate !== undefined ?
         this.formatDateForBackend(formData.lastOrderDate) : null;
-      
+
       supplierData.lastReviewRating = formData.lastReviewRating;
       supplierData.lastReviewComment = formData.lastReviewComment;
       supplierData.onTimeDelivery = formData.onTimeDelivery;
@@ -118,14 +118,14 @@ export class CrearSupplierComponent implements OnInit {
     if (currentUser && currentUser.id) {
       supplierData.userModify = currentUser.id;
     }
-    
+
     this.supplierService.createSupplier(supplierData).subscribe({
       next: (response) => {
         if (response.error) {
           Swal.fire('Error', response.respuesta || 'Error al crear el proveedor', 'error');
           return;
         }
-        
+
         Swal.fire('Éxito', 'Proveedor creado correctamente', 'success');
         this.router.navigate(['/listar-suppliers']);
       },
@@ -135,7 +135,7 @@ export class CrearSupplierComponent implements OnInit {
       }
     });
   }
-  
+
   private getUserFromStorage(): any {
     const userStr = localStorage.getItem('currentUser');
     return userStr ? JSON.parse(userStr) : null;
@@ -149,14 +149,14 @@ export class CrearSupplierComponent implements OnInit {
     const currentRating = this.supplierForm.get('lastReviewRating')?.value || 0;
     return star <= currentRating ? 'bi-star-fill' : 'bi-star';
   }
-  
+
   regresar(): void {
     this.location.back();
   }
 
   private formatDateForBackend(dateString: string | Date | null): string | null {
     if (!dateString) return null;
-    
+
     try {
       const date = typeof dateString === 'string' ? new Date(dateString) : dateString;
 
@@ -168,11 +168,39 @@ export class CrearSupplierComponent implements OnInit {
       const year = date.getUTCFullYear();
       const month = String(date.getUTCMonth() + 1).padStart(2, '0');
       const day = String(date.getUTCDate()).padStart(2, '0');
-      
+
       return `${year}-${month}-${day}T00:00:00.000Z`;
     } catch (error) {
       console.error('Error al formatear fecha:', error);
       return null;
     }
+  }
+
+  onKeyPress(event: KeyboardEvent, field: string) {
+ const allowedPattern = /^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s'-]$/;
+  
+  // Teclas especiales permitidas (backspace, tab, flechas, etc.)
+  const allowedKeys = [
+    'Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete', 
+    'Home', 'End'
+  ];
+
+  // Permitir teclas de control especiales
+  if (allowedKeys.includes(event.key)) {
+    return;
+  }
+
+  // Crear versión normalizada del caracter (para manejar mayúsculas/acentos)
+  const inputChar = String.fromCharCode(event.charCode);
+
+  // Validar contra el patrón permitido
+  if (!allowedPattern.test(inputChar)) {
+    event.preventDefault();
+    
+    // Opcional: Feedback visual
+    const input = event.target as HTMLInputElement;
+    input.classList.add('invalid-input');
+    setTimeout(() => input.classList.remove('invalid-input'), 300);
+  }
   }
 }
