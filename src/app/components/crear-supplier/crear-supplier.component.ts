@@ -46,7 +46,7 @@ export class CrearSupplierComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       contactPerson: ['', [Validators.required, Validators.pattern(/^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s']+$/)]],
 
-      taxId: [''],
+      taxId: ['', [Validators.required]],
       website: [''],
       notes: [''],
 
@@ -177,30 +177,30 @@ export class CrearSupplierComponent implements OnInit {
   }
 
   onKeyPress(event: KeyboardEvent, field: string) {
- const allowedPattern = /^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s'-]$/;
-  
-  // Teclas especiales permitidas (backspace, tab, flechas, etc.)
-  const allowedKeys = [
-    'Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete', 
-    'Home', 'End'
-  ];
+    const allowedPattern = /^[a-zA-ZáéíóúÁÉÍÓÚüÜñÑ\s'-]$/;
 
-  // Permitir teclas de control especiales
-  if (allowedKeys.includes(event.key)) {
-    return;
-  }
+    // Teclas especiales permitidas (backspace, tab, flechas, etc.)
+    const allowedKeys = [
+      'Backspace', 'Tab', 'ArrowLeft', 'ArrowRight', 'Delete',
+      'Home', 'End'
+    ];
 
-  // Crear versión normalizada del caracter (para manejar mayúsculas/acentos)
-  const inputChar = String.fromCharCode(event.charCode);
+    // Permitir teclas de control especiales
+    if (allowedKeys.includes(event.key)) {
+      return;
+    }
 
-  // Validar contra el patrón permitido
-  if (!allowedPattern.test(inputChar)) {
-    event.preventDefault();
-    
-    // Opcional: Feedback visual
-    const input = event.target as HTMLInputElement;
-    input.classList.add('invalid-input');
-    setTimeout(() => input.classList.remove('invalid-input'), 300);
-  }
+    // Crear versión normalizada del caracter (para manejar mayúsculas/acentos)
+    const inputChar = String.fromCharCode(event.charCode);
+
+    // Validar contra el patrón permitido
+    if (!allowedPattern.test(inputChar)) {
+      event.preventDefault();
+
+      // Opcional: Feedback visual
+      const input = event.target as HTMLInputElement;
+      input.classList.add('invalid-input');
+      setTimeout(() => input.classList.remove('invalid-input'), 300);
+    }
   }
 }

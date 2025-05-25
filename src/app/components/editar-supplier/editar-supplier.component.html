@@ -1,188 +1,190 @@
 <div class="container-fluid row mx-auto">
-    <app-aside class="p-0 m-0 col-2"></app-aside>
-    <div class="col-10 main-content position-relative max-height-vh-100 h-100 border-radius-lg">
-      <div class="container-fluid py-2">
-        <div class="row">
-          <div class="col-12">
-            <div class="card my-4">
-              <div class="top-header card-header p-0 position-relative mt-n4 mx-3 z-index-2 border-radius rounded bg-dark">
-                <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
-                  <h6 class="text-white text-capitalize ps-3">{{ formTitle }}</h6>
-                </div>
+  <app-aside class="p-0 m-0 col-2"></app-aside>
+  <div class="col-10 main-content position-relative max-height-vh-100 h-100 border-radius-lg">
+    <div class="card col-12 my-4 mx-auto">
+      <div class="top-header card-header p-0 position-relative mt-n4 mx-3 z-index-2 border-radius rounded bg-dark">
+        <div class="bg-gradient-dark shadow-dark border-radius-lg pt-4 pb-3">
+          <h6 class="text-white text-capitalize ps-3">{{ formTitle }}</h6>
+        </div>
+      </div>
+
+      <div class="card-body px-4 pb-2">
+        <!-- Spinner de carga -->
+        <div *ngIf="loading" class="d-flex justify-content-center my-5">
+          <div class="spinner-border text-primary" role="status">
+            <span class="visually-hidden">Cargando...</span>
+          </div>
+        </div>
+
+        <!-- Formulario -->
+        <form *ngIf="!loading" [formGroup]="supplierForm" (ngSubmit)="onSubmit()">
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Nombre del Proveedor*</label>
+              <div class="input-group input-group-outline mb-3">
+                <input type="text" class="form-control" formControlName="name">
               </div>
-              
-              <div class="card-body px-4 pb-2">
-                <!-- Spinner de carga -->
-                <div *ngIf="loading" class="d-flex justify-content-center my-5">
-                  <div class="spinner-border text-primary" role="status">
-                    <span class="visually-hidden">Cargando...</span>
-                  </div>
-                </div>
-                
-                <!-- Formulario -->
-                <form *ngIf="!loading" [formGroup]="supplierForm" (ngSubmit)="onSubmit()">
-                  <div class="row mb-3">
-                    <div class="col-md-6">
-                      <label class="form-label">Nombre del Proveedor*</label>
-                      <div class="input-group input-group-outline mb-3">
-                        <input type="text" class="form-control" formControlName="name">
-                      </div>
-                      <div *ngIf="supplierForm.get('name')?.invalid && supplierForm.get('name')?.touched" class="text-danger">
-                        <small *ngIf="supplierForm.get('name')?.errors?.['required']">El nombre es requerido</small>
-                        <small *ngIf="supplierForm.get('name')?.errors?.['minlength']">El nombre debe tener al menos 3 caracteres</small>
-                      </div>
-                    </div>
-                    
-                    <div class="col-md-6">
-                      <label class="form-label">Persona de Contacto*</label>
-                      <div class="input-group input-group-outline mb-3">
-                        <input type="text" class="form-control" formControlName="contactPerson">
-                      </div>
-                      <div *ngIf="supplierForm.get('contactPerson')?.invalid && supplierForm.get('contactPerson')?.touched" class="text-danger">
-                        <small *ngIf="supplierForm.get('contactPerson')?.errors?.['required']">La persona de contacto es requerida</small>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div class="row mb-3">
-                    <div class="col-md-6">
-                      <label class="form-label">Dirección*</label>
-                      <div class="input-group input-group-outline mb-3">
-                        <input type="text" class="form-control" formControlName="address">
-                      </div>
-                      <div *ngIf="supplierForm.get('address')?.invalid && supplierForm.get('address')?.touched" class="text-danger">
-                        <small *ngIf="supplierForm.get('address')?.errors?.['required']">La dirección es requerida</small>
-                      </div>
-                    </div>
-                    
-                    <div class="col-md-6">
-                      <label class="form-label">Teléfono*</label>
-                      <div class="input-group input-group-outline mb-3">
-                        <input type="tel" class="form-control" formControlName="phone">
-                      </div>
-                      <div *ngIf="supplierForm.get('phone')?.invalid && supplierForm.get('phone')?.touched" class="text-danger">
-                        <small *ngIf="supplierForm.get('phone')?.errors?.['required']">El teléfono es requerido</small>
-                        <small *ngIf="supplierForm.get('phone')?.errors?.['pattern']">El teléfono debe tener 10 dígitos</small>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div class="row mb-3">
-                    <div class="col-md-6">
-                      <label class="form-label">Correo Electrónico*</label>
-                      <div class="input-group input-group-outline mb-3">
-                        <input type="email" class="form-control" formControlName="email">
-                      </div>
-                      <div *ngIf="supplierForm.get('email')?.invalid && supplierForm.get('email')?.touched" class="text-danger">
-                        <small *ngIf="supplierForm.get('email')?.errors?.['required']">El correo electrónico es requerido</small>
-                        <small *ngIf="supplierForm.get('email')?.errors?.['email']">El formato del correo electrónico no es válido</small>
-                      </div>
-                    </div>
-                    
-                    <div class="col-md-6">
-                      <label class="form-label">Identificación Fiscal</label>
-                      <div class="input-group input-group-outline mb-3">
-                        <input type="text" class="form-control" formControlName="taxId">
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div class="row mb-3">
-                    <div class="col-md-6">
-                      <label class="form-label">Sitio Web</label>
-                      <div class="input-group input-group-outline mb-3">
-                        <input type="url" class="form-control" formControlName="website">
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div class="row mb-3">
-                    <div class="col-12">
-                      <label class="form-label">Notas Adicionales</label>
-                      <div class="input-group input-group-outline mb-3">
-                        <textarea class="form-control" rows="3" formControlName="notes"></textarea>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <!-- Sección de reseñas -->
-                  <div class="row mb-3">
-                    <div class="col-12">
-                      <div class="form-check form-switch ps-0">
-                        <input class="form-check-input ms-auto" type="checkbox" id="hasReview" formControlName="hasReview">
-                        <label class="form-check-label ms-3" for="hasReview">¿Agregar reseña del proveedor?</label>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <div *ngIf="showRatingFields" class="review-section">
-                    <h6 class="mb-3">Información de Reseña</h6>
-                    
-                    <div class="row mb-3">
-                      <div class="col-md-6">
-                        <label class="form-label">Fecha del Último Pedido*</label>
-                        <div class="input-group input-group-outline mb-3">
-                          <input type="date" class="form-control" formControlName="lastOrderDate">
-                        </div>
-                        <div *ngIf="supplierForm.get('lastOrderDate')?.invalid && supplierForm.get('lastOrderDate')?.touched" class="text-danger">
-                          <small *ngIf="supplierForm.get('lastOrderDate')?.errors?.['required']">La fecha del último pedido es requerida</small>
-                        </div>
-                      </div>
-                      
-                      <div class="col-md-6">
-                        <label class="form-label">Calificación*</label>
-                        <div class="star-rating mb-3">
-                          <i *ngFor="let star of [1, 2, 3, 4, 5]" 
-                             [ngClass]="getRatingClass(star)" 
-                             class="bi cursor-pointer fs-5"
-                             (click)="updateRating(star)"></i>
-                          <span class="ms-2">{{ supplierForm.get('lastReviewRating')?.value || 0 }}/5</span>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div class="row mb-3">
-                      <div class="col-12">
-                        <label class="form-label">Comentarios sobre la Reseña</label>
-                        <div class="input-group input-group-outline mb-3">
-                          <textarea class="form-control" rows="2" formControlName="lastReviewComment"></textarea>
-                        </div>
-                      </div>
-                    </div>
-                    
-                    <div class="row mb-3">
-                      <div class="col-md-6">
-                        <div class="form-check form-switch ps-0">
-                          <input class="form-check-input ms-auto" type="checkbox" id="onTimeDelivery" formControlName="onTimeDelivery">
-                          <label class="form-check-label ms-3" for="onTimeDelivery">¿Entrega a tiempo?</label>
-                        </div>
-                      </div>
-                      
-                      <div class="col-md-6">
-                        <div class="form-check form-switch ps-0">
-                          <input class="form-check-input ms-auto" type="checkbox" id="qualityIssues" formControlName="qualityIssues">
-                          <label class="form-check-label ms-3" for="qualityIssues">¿Problemas de calidad?</label>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  
-                  <!-- Botones de acción -->
-                  <div class="row mt-4">
-                    <div class="col-12 d-flex justify-content-end">
-                      <button type="button" class="btn btn-outline-secondary me-2" (click)="regresar()">
-                        <i class="bi bi-arrow-left"></i> Cancelar
-                      </button>
-                      <button type="submit" class="btn btn-dark">
-                        <i class="bi bi-save"></i> {{ submitButtonText }}
-                      </button>
-                    </div>
-                  </div>
-                </form>
+              <div *ngIf="supplierForm.get('name')?.invalid && supplierForm.get('name')?.touched" class="text-danger">
+                <small *ngIf="supplierForm.get('name')?.errors?.['required']">El nombre es requerido</small>
+                <small *ngIf="supplierForm.get('name')?.errors?.['minlength']">El nombre debe tener al menos 3
+                  caracteres</small>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Persona de Contacto*</label>
+              <div class="input-group input-group-outline mb-3">
+                <input type="text" class="form-control" formControlName="contactPerson">
+              </div>
+              <div *ngIf="supplierForm.get('contactPerson')?.invalid && supplierForm.get('contactPerson')?.touched"
+                class="text-danger">
+                <small *ngIf="supplierForm.get('contactPerson')?.errors?.['required']">La persona de contacto es
+                  requerida</small>
               </div>
             </div>
           </div>
-        </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Dirección*</label>
+              <div class="input-group input-group-outline mb-3">
+                <input type="text" class="form-control" formControlName="address">
+              </div>
+              <div *ngIf="supplierForm.get('address')?.invalid && supplierForm.get('address')?.touched"
+                class="text-danger">
+                <small *ngIf="supplierForm.get('address')?.errors?.['required']">La dirección es requerida</small>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">Teléfono*</label>
+              <div class="input-group input-group-outline mb-3">
+                <input type="tel" class="form-control" formControlName="phone">
+              </div>
+              <div *ngIf="supplierForm.get('phone')?.invalid && supplierForm.get('phone')?.touched" class="text-danger">
+                <small *ngIf="supplierForm.get('phone')?.errors?.['required']">El teléfono es requerido</small>
+                <small *ngIf="supplierForm.get('phone')?.errors?.['pattern']">El teléfono debe tener 10 dígitos</small>
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Correo Electrónico*</label>
+              <div class="input-group input-group-outline mb-3">
+                <input type="email" class="form-control" formControlName="email">
+              </div>
+              <div *ngIf="supplierForm.get('email')?.invalid && supplierForm.get('email')?.touched" class="text-danger">
+                <small *ngIf="supplierForm.get('email')?.errors?.['required']">El correo electrónico es
+                  requerido</small>
+                <small *ngIf="supplierForm.get('email')?.errors?.['email']">El formato del correo electrónico no es
+                  válido</small>
+              </div>
+            </div>
+
+            <div class="col-md-6">
+              <label class="form-label">RUT / NIT*</label>
+              <div class="input-group input-group-outline mb-3">
+                <input type="text" class="form-control" formControlName="taxId">
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-md-6">
+              <label class="form-label">Sitio Web</label>
+              <div class="input-group input-group-outline mb-3">
+                <input type="url" class="form-control" formControlName="website">
+              </div>
+            </div>
+          </div>
+
+          <div class="row mb-3">
+            <div class="col-12">
+              <label class="form-label">Notas Adicionales</label>
+              <div class="input-group input-group-outline mb-3">
+                <textarea class="form-control" rows="3" formControlName="notes"></textarea>
+              </div>
+            </div>
+          </div>
+
+          <!-- Sección de reseñas -->
+          <div class="row mb-3">
+            <div class="col-12">
+              <div class="form-check form-switch ps-0">
+                <input class="form-check-input ms-auto" type="checkbox" id="hasReview" formControlName="hasReview">
+                <label class="form-check-label ms-3" for="hasReview">¿Agregar reseña del proveedor?</label>
+              </div>
+            </div>
+          </div>
+
+          <div *ngIf="showRatingFields" class="review-section">
+            <h6 class="mb-3">Información de Reseña</h6>
+
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <label class="form-label">Fecha del Último Pedido*</label>
+                <div class="input-group input-group-outline mb-3">
+                  <input type="date" class="form-control" formControlName="lastOrderDate">
+                </div>
+                <div *ngIf="supplierForm.get('lastOrderDate')?.invalid && supplierForm.get('lastOrderDate')?.touched"
+                  class="text-danger">
+                  <small *ngIf="supplierForm.get('lastOrderDate')?.errors?.['required']">La fecha del último pedido es
+                    requerida</small>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <label class="form-label">Calificación*</label>
+                <div class="star-rating mb-3">
+                  <i *ngFor="let star of [1, 2, 3, 4, 5]" [ngClass]="getRatingClass(star)"
+                    class="bi cursor-pointer fs-5" (click)="updateRating(star)"></i>
+                  <span class="ms-2">{{ supplierForm.get('lastReviewRating')?.value || 0 }}/5</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-12">
+                <label class="form-label">Comentarios sobre la Reseña</label>
+                <div class="input-group input-group-outline mb-3">
+                  <textarea class="form-control" rows="2" formControlName="lastReviewComment"></textarea>
+                </div>
+              </div>
+            </div>
+
+            <div class="row mb-3">
+              <div class="col-md-6">
+                <div class="form-check form-switch ps-0">
+                  <input class="form-check-input ms-auto" type="checkbox" id="onTimeDelivery"
+                    formControlName="onTimeDelivery">
+                  <label class="form-check-label ms-3" for="onTimeDelivery">¿Entrega a tiempo?</label>
+                </div>
+              </div>
+
+              <div class="col-md-6">
+                <div class="form-check form-switch ps-0">
+                  <input class="form-check-input ms-auto" type="checkbox" id="qualityIssues"
+                    formControlName="qualityIssues">
+                  <label class="form-check-label ms-3" for="qualityIssues">¿Problemas de calidad?</label>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Botones de acción -->
+          <div class="row mt-4">
+            <div class="col-12 d-flex justify-content-end">
+              <button type="button" class="btn btn-outline-secondary me-2" (click)="regresar()">
+                <i class="bi bi-arrow-left"></i> Cancelar
+              </button>
+              <button type="submit" class="btn btn-dark">
+                <i class="bi bi-save"></i> {{ submitButtonText }}
+              </button>
+            </div>
+          </div>
+        </form>
       </div>
     </div>
   </div>
+</div>

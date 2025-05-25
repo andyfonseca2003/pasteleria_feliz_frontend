@@ -60,6 +60,5 @@ export const routes: Routes = [
   { path: 'listar-usuarios', component: ListarUsuariosComponent, canActivate: [RolesGuard], data: { roles: ['ADMIN'] } },
   { path: 'editar-usuarios/:id', component: EditarUsuariosComponent, canActivate: [RolesGuard], data: { roles: ['ADMIN'] } },
   
-  { path: '', redirectTo: 'login', pathMatch: 'full' },
   { path: "**", pathMatch: "full", redirectTo: "login" },
 ];

@@ -5,19 +5,29 @@ import { AuthService } from '../../services/auth/auth.service';
 import Swal from 'sweetalert2';
 import { LoginDTO } from '../../interfaces/Cuenta/login-dto';
 import { TokenService } from '../../services/token.service';
+import { RecaptchaModule } from 'ng-recaptcha';
+import { CommonModule } from '@angular/common';
 
 @Component({
   selector: 'app-login',
   standalone: true,
-  imports: [ReactiveFormsModule, RouterModule],
+  imports: [ReactiveFormsModule, RouterModule,RecaptchaModule, CommonModule],
   templateUrl: './login.component.html',
   styleUrl: './login.component.css'
 })
 export class LoginComponent {
 
   crearLogin!: FormGroup;
+  captchaToken: string | null = null;
+  mostrarCaptcha = true; // Puedes activar esto dinámicamente tras varios errores
+  errorMsg: string | null = "";
+  alerta = true;
 
-  constructor(private formBuilder: FormBuilder, private authService: AuthService, private tokenService: TokenService, private route: ActivatedRoute) {
+  constructor(
+    private formBuilder: FormBuilder,
+    private authService: AuthService,
+    private tokenService: TokenService,
+    private route: ActivatedRoute) {
     this.mostrarError();
     this.crearFormulario();
   }
@@ -29,10 +39,15 @@ export class LoginComponent {
     },
     );
   }
+
+  captchaResolved(token: string) {
+    this.captchaToken = token;
+  }
+
   private mostrarError() {
-    const errorMsg = this.route.snapshot.queryParamMap.get('mensaje');
-    if (errorMsg) {
-      alert(decodeURIComponent(errorMsg));
+    this.errorMsg = this.route.snapshot.queryParamMap.get('mensaje');
+    if (this.errorMsg) {
+      this.alerta = false;
     }
   }
 

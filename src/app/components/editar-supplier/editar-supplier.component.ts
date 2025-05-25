@@ -7,6 +7,7 @@ import { AsideComponent } from '../shared/aside/aside.component';
 import Swal from 'sweetalert2';
 import { SupplierService } from '../../services/supplier.service';
 import { SupplierFormData } from '../../interfaces/supplier/supplier-form-data';
+import { TokenService } from '../../services/token.service';
 
 @Component({
   selector: 'app-editar-supplier',
@@ -21,6 +22,7 @@ import { SupplierFormData } from '../../interfaces/supplier/supplier-form-data';
   templateUrl: './editar-supplier.component.html',
   styleUrl: './editar-supplier.component.css'
 })
+
 export class EditarSupplierComponent implements OnInit {
   supplierForm!: FormGroup;
   isEditing = true;
@@ -35,7 +37,8 @@ export class EditarSupplierComponent implements OnInit {
     private supplierService: SupplierService,
     private router: Router,
     private route: ActivatedRoute,
-    private location: Location
+    private location: Location,
+    private tokenService: TokenService
   ) { }
 
   ngOnInit(): void {
@@ -68,7 +71,7 @@ export class EditarSupplierComponent implements OnInit {
       email: ['', [Validators.required, Validators.email]],
       contactPerson: ['', Validators.required],
 
-      taxId: [''],
+      taxId: ['', [Validators.required, Validators.email]],
       website: [''],
       notes: [''],
 
@@ -78,7 +81,8 @@ export class EditarSupplierComponent implements OnInit {
       lastReviewComment: [''],
       onTimeDelivery: [true],
       qualityIssues: [false],
-      status: ['ACTIVO']
+      status: ['ACTIVO'],
+      userModify: ['']
     });
 
     this.supplierForm.get('hasReview')?.valueChanges.subscribe(hasReview => {
@@ -220,7 +224,8 @@ export class EditarSupplierComponent implements OnInit {
       contactPerson: formData.contactPerson,
       status: "ACTIVO",
       createdAt: new Date().toISOString(),
-      updatedAt: new Date().toISOString()
+      updatedAt: new Date().toISOString(),
+      userModify: this.tokenService.getIDCuenta()
     };
 
     if (formData.hasReview) {
@@ -231,11 +236,6 @@ export class EditarSupplierComponent implements OnInit {
       supplierData.lastReviewComment = formData.lastReviewComment;
       supplierData.onTimeDelivery = formData.onTimeDelivery;
       supplierData.qualityIssues = formData.qualityIssues;
-    }
-
-    const currentUser = this.getUserFromStorage();
-    if (currentUser && currentUser.id) {
-      supplierData.userModify = currentUser.id;
     }
 
     this.supplierService.updateSupplier(this.supplierId, supplierData).subscribe({
