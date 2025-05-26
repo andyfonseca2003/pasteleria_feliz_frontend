@@ -69,9 +69,9 @@ export class EditarSupplierComponent implements OnInit {
       address: ['', Validators.required],
       phone: ['', [Validators.required, Validators.pattern(/^\d{10}$/)]],
       email: ['', [Validators.required, Validators.email]],
-      contactPerson: ['', Validators.required],
+      contactPerson: ['', [Validators.required, Validators.minLength(3)]],
 
-      taxId: ['', [Validators.required, Validators.email]],
+      taxId: ['', [Validators.required]],
       website: [''],
       notes: [''],
 
@@ -209,7 +209,34 @@ export class EditarSupplierComponent implements OnInit {
         control?.markAsTouched();
       });
 
-      Swal.fire('Error', 'Por favor, complete todos los campos requeridos correctamente', 'error');
+      const camposInvalidos: string[] = [];
+
+      const nombresCampos: Record<string, string> = {
+        name: 'Nombre',
+        taxId: 'Nit',
+        address: 'Dirección',
+        phone: 'Teléfono',
+        email: 'Correo electrónico',
+        contactPerson: 'Persona de contacto',
+        lastOrderDate: 'Fecha del último pedido',
+        lastReviewRating: 'Calificación de la última reseña',
+        lastReviewComment: 'Comentario de la última reseña',
+        onTimeDelivery: 'Entrega a tiempo',
+        qualityIssues: 'Problemas de calidad'
+      };
+
+      for (const key of Object.keys(this.supplierForm.controls)) {
+        const control = this.supplierForm.get(key);
+        if (control && control.invalid) {
+          camposInvalidos.push(nombresCampos[key] || key);
+        }
+      }
+
+      Swal.fire(
+        'Campos incompletos',
+        `Por favor, completa los siguientes campos correctamente:\n\n- ${camposInvalidos.join('\n- ')}`,
+        'error'
+      );
       return;
     }
 
