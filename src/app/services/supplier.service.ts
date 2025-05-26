@@ -7,7 +7,7 @@ import { MensajeDTO } from '../interfaces/mensaje-dto';
   providedIn: 'root'
 })
 export class SupplierService {
-  private supplierURL = "http://localhost:8080/api/suppliers";
+  private supplierURL = "https://pasteleria-v6wz.onrender.com/api/suppliers";
   
   constructor(private http: HttpClient) { }
 

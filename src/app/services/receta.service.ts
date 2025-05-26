@@ -7,7 +7,7 @@ import { MensajeDTO } from '../interfaces/mensaje-dto';
   providedIn: 'root'
 })
 export class RecetaService {
-  private recetaURL = "http://localhost:8080/api/recipes";
+  private recetaURL = "https://pasteleria-v6wz.onrender.com/api/recipes";
   
   constructor(private http: HttpClient) { }
 

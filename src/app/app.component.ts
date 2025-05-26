@@ -13,4 +13,7 @@ import { HeaderComponent } from './components/shared/header/header.component';
 })
 export class AppComponent {
   title = 'pasteleria_feliz';
+  public throwTestError(): void {
+  throw new Error("Sentry Test Error");
+}
 }

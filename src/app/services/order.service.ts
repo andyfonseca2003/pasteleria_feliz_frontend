@@ -9,7 +9,7 @@ import { UpdateCakeOrderStatusCommand } from '../interfaces/order/update-cake-or
   providedIn: 'root'
 })
 export class OrderService {
-  private apiURL = "http://localhost:8080/api";
+  private apiURL = "https://pasteleria-v6wz.onrender.com/api";
 
   constructor(private http: HttpClient) { }
 

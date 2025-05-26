@@ -14,7 +14,7 @@ import { recuperarDTO } from '../../interfaces/Cuenta/recuperar-cuenta-dto';
 
 export class AuthService {
 
-  private authURL = "http://localhost:8080/api/auth";
+  private authURL = "https://pasteleria-v6wz.onrender.com/api/auth";
 
   constructor(private http: HttpClient) { }
 
