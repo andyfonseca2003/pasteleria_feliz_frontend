@@ -3,7 +3,7 @@ name: Deploy Angular to Firebase Hosting
 on:
   push:
     branches:
-      - main  # O tu rama principal
+      - render  # O tu rama principal
 
 jobs:
   build-and-deploy:
