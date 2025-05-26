@@ -10,7 +10,7 @@ import { CrearSupplierDTO } from '../interfaces/supplier/crear-supplier-dto';
   providedIn: 'root'
 })
 export class AdministradorService {
-  private adminURL = "http://localhost:8080/api";
+  private adminURL = "https://pasteleria-v6wz.onrender.com/api";
 
   constructor(private http: HttpClient) { }
 

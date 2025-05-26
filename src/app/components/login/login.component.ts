@@ -70,6 +70,6 @@ export class LoginComponent {
   }
 
   public abrirGoogle() {
-    window.location.href = 'https://ing-soft-iii-pasteleria.onrender.com/oauth2/authorization/google';
+    window.location.href = 'https://pasteleria-v6wz.onrender.com/oauth2/authorization/google';
   }
 }
